@@ -1,0 +1,26 @@
+:root {
+    --theme-1: #084c61ff;
+    --theme-2: #db504aff;
+    --theme-3: #e3b505ff;
+    --theme-4: #4f6d7aff;
+    --theme-5: #56a3a6ff;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    position: fixed;
+
+    background-color: var(--theme-1);
+}
+
+main {
+    height: 100vh;
+    width: 100vw;
+    max-width: 1600px;
+    max-height: 1000px;
+}
