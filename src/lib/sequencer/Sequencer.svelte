@@ -1,14 +1,42 @@
 <script lang="ts">
     import { activeSequencer } from "$lib/stores";
-    import { data, toggleCell, rows, cols } from "$lib/stores/musical";
+    import { data, toggleCell, moveCell, rows, cols } from "$lib/stores/musical";
 
     export let id: number;
     let currentRow = -1;
+    
+    // for moving
+    let mouseIsDown = false;
+    let startCol = -1;
+    let startRow = -1;
 
     const toggle = () => activeSequencer.update(activeId => 
         activeId === id 
         ? null 
         : id);
+
+    const handleMouseDown = (colIndex: number, rowIndex: number) => {
+        mouseIsDown = true;
+        startCol = colIndex;
+        startRow = rowIndex;
+    };
+
+    const handleMouseUp = (colIndex: number, rowIndex: number) => {
+        startCol === colIndex && startRow === rowIndex
+            ? toggleCell(id, rowIndex, colIndex)
+            : moveCell(id, startRow, startCol, rowIndex, colIndex);
+        
+        startCol = -1;
+        startRow = -1;
+        mouseIsDown = false;
+    }
+
+    const handleMouseLeave = () => {
+        mouseIsDown = false;
+        startCol = -1;
+        startRow = -1;
+        currentRow = -1;
+    };
 
     $: collapsed = $activeSequencer !== id;
 </script>
@@ -35,21 +63,21 @@
     <div 
         class="sequencer__grid"
         role="application"
-        on:mouseleave={() => currentRow = -1}
+        on:mouseleave={handleMouseLeave}
     >
         {#each Array(cols) as _, colIndex}
             {#each Array(rows) as _, rowIndex}
                 <button 
                     class="sequencer__cell" 
-                    data-col={colIndex} 
-                    data-row={rowIndex}
                     style="grid-column: {colIndex + 1}; grid-row: {rowIndex + 1};}"
                     class:sequencer__cell--highlighted={!(Math.floor(colIndex / 4) % 2)}
                     class:sequencer__cell--active={$data[id][rowIndex][colIndex].amp > 0}
+                    class:mouseIsDown={mouseIsDown}
                     aria-label="Toggle cell at row {rowIndex + 1}, column {colIndex + 1}"
-                    on:click={() => toggleCell(id, rowIndex, colIndex)}
                     on:mouseover={() => currentRow = rowIndex}
                     on:focus={() => currentRow = rowIndex}
+                    on:mousedown={() => handleMouseDown(colIndex, rowIndex)}
+                    on:mouseup={() => handleMouseUp(colIndex, rowIndex)}
                 >
                 </button>
             {/each}
@@ -137,6 +165,10 @@
                 background-color: rgba(255, 255, 255, 0.1);
             }
             &--active {
+                background-color: var(--theme-2);
+            }
+
+            &.mouseIsDown:hover {
                 background-color: var(--theme-2);
             }
         }

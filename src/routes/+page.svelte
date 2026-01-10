@@ -8,8 +8,8 @@
 
 <main>
     <div class="sequencers">
-        {#each $data as _, index}
-            <Sequencer id={index} />
+        {#each Object.keys($data) as key}
+            <Sequencer id={+key} />
         {/each}
     </div>
 </main>
