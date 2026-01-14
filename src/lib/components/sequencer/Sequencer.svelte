@@ -1,5 +1,6 @@
 <script lang="ts">
     import { activeSequencer } from "$lib/stores";
+    import { t } from '$lib/stores/transport';
     import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/musical";
 
     export let id: number;
@@ -70,7 +71,8 @@
                         class="sequencer__cell" 
                         style="grid-column: {divisionIndex + 1}; grid-row: {(notes - noteIndex) + 1};}"
                         class:sequencer__cell--highlighted={!(Math.floor(divisionIndex / 4) % 2)}
-                        class:sequencer__cell--active={$data[id][divisionIndex][noteIndex].amp > 0}
+                        class:sequencer__cell--on={$data[id][divisionIndex][noteIndex].amp > 0}
+                        class:sequencer__cell--active={$t % (divisions * bars) === divisionIndex}
                         class:mouseIsDown={mouseIsDown}
                         aria-label="Toggle cell at row {noteIndex + 1}, column {divisionIndex + 1}"
                         on:mouseover={() => currentNote = noteIndex}
@@ -171,11 +173,14 @@
             &--highlighted {
                 background-color: rgba(255, 255, 255, 0.1);
             }
-            &:hover:not(&--active) {
+            &:hover:not(&--on) {
                 background-color: rgba(255, 255, 255, 0.1);
             }
-            &--active {
+            &--on {
                 background-color: rgba(255, 255, 255, 0.5);
+            }
+            &--active {
+                background-color: var(--theme-2);
             }
 
             &.mouseIsDown:hover {

@@ -2,7 +2,7 @@
     import '/node_modules/normalize.css/normalize.css';
     import '$lib/styles.css';
 
-    import Sequencer from '$lib/sequencer/Sequencer.svelte';
+    import Sequencer from '$lib/components/sequencer/Sequencer.svelte';
     import { data } from '$lib/stores/musical';
 </script>
 

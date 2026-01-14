@@ -1,3 +1,0 @@
-[submodule "src/lib/satori"]
-	path = src/lib/satori
-	url = https://github.com/cephasteom/satori
