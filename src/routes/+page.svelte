@@ -3,7 +3,7 @@
     import '$lib/styles.css';
 
     import Sequencer from '$lib/components/sequencer/Sequencer.svelte';
-    import { data } from '$lib/stores/musical';
+    import { data } from '$lib/stores/sequencer';
 </script>
 
 <main>

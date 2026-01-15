@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { activeSequencer } from "$lib/stores";
+    import { activeSequencer } from "$lib/stores/sequencer";
     import { t } from '$lib/stores/transport';
-    import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/musical";
+    import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/sequencer";
     import Cell from "./Cell.svelte";
 
     export let id: number;
