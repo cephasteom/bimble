@@ -4,7 +4,8 @@ import { divisions, query } from './sequencer';
 
 export const cps = writable(.25);
 export const t = writable(-1); // time pointer in divisions
-export const isPlaying = writable(true);
+export const isPlaying = writable(false);
+export const toggleIsPlaying = () => isPlaying.update(p => !p);
 
 const transport = getTransport()
 const draw = getDraw();
@@ -18,7 +19,8 @@ new Loop(time => {
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
     const events = query(nextT);
-    console.log(events)
+    // TODO: trigger events at scheduled time
+
 }, `${divisions}n`).start(0);
 
 const play = () => transport.start('+0.1');
@@ -31,3 +33,18 @@ isPlaying.subscribe(playing => playing
     ? play()
     : stop()
 );
+
+export const mapTransportKeys = () => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code === 'Space') {
+            toggleIsPlaying();
+            e.preventDefault();
+        }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+    };
+};

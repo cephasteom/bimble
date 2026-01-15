@@ -3,6 +3,7 @@
     import { t } from '$lib/stores/transport';
     import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/sequencer";
     import Cell from "./Cell.svelte";
+    import SVG from "../SVG.svelte";
 
     export let id: number;
     let currentNote = -1;
@@ -43,7 +44,13 @@
 
 <section class="sequencer">
     <div class="sequencer__meta">
-        <button on:click={toggle}>{collapsed ? '▲' : '▼'}</button>
+        <button on:click={toggle}>
+            {#if collapsed}
+                <SVG type="down" />
+            {:else}
+                <SVG type="up" />
+            {/if}
+        </button>
     </div>
 
     <div 
@@ -105,6 +112,9 @@
                 font-size: .75rem;
                 cursor: pointer;
                 text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
         
