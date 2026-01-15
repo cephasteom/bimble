@@ -2,6 +2,7 @@
     import { activeSequencer } from "$lib/stores";
     import { t } from '$lib/stores/transport';
     import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/musical";
+    import Cell from "./Cell.svelte";
 
     export let id: number;
     let currentNote = -1;
@@ -67,20 +68,18 @@
         >
             {#each Array(divisions * bars) as _, divisionIndex}
                 {#each Array(notes) as _, noteIndex}
-                    <button 
-                        class="sequencer__cell" 
-                        style="grid-column: {divisionIndex + 1}; grid-row: {(notes - noteIndex) + 1};}"
-                        class:sequencer__cell--highlighted={!(Math.floor(divisionIndex / 4) % 2)}
-                        class:sequencer__cell--on={$data[id][divisionIndex][noteIndex].amp > 0}
-                        class:sequencer__cell--active={$t % (divisions * bars) === divisionIndex}
-                        class:mouseIsDown={mouseIsDown}
-                        aria-label="Toggle cell at row {noteIndex + 1}, column {divisionIndex + 1}"
-                        on:mouseover={() => currentNote = noteIndex}
-                        on:focus={() => currentNote = noteIndex}
-                        on:mousedown={() => handleMouseDown(divisionIndex, noteIndex)}
-                        on:mouseup={() => handleMouseUp(divisionIndex, noteIndex)}
-                    >
-                    </button>
+                    <Cell 
+                        division={divisionIndex}
+                        note={noteIndex}
+                        row={(notes - noteIndex) + 1}
+                        highlighted={!(Math.floor(divisionIndex / 4) % 2)}
+                        on={$data[id][divisionIndex][noteIndex].amp > 0}
+                        active={$t % (divisions * bars) === divisionIndex}
+                        handleMouseOver={() => currentNote = noteIndex}
+                        handleMouseDown={handleMouseDown}
+                        handleMouseUp={handleMouseUp}
+                        {mouseIsDown}
+                    />
                 {/each}
             {/each}
         </div>
@@ -89,7 +88,6 @@
 
 <style lang="scss">
     .sequencer {
-        // border: 1px solid rgba(255, 255, 255, 0.1);
         display: grid;
         grid-template-columns: 3rem auto;
 
@@ -157,35 +155,6 @@
             grid-template-columns: repeat(calc(divisions * bars), 1fr);
             grid-template-rows: repeat(notes, .5fr);
             margin-top: -3px;
-
-        }
-
-        &__cell {
-            border: 0;
-            box-sizing: border-box;
-            height: 1.5rem;
-            background-color: transparent;
-            cursor: pointer;
-            padding: 0;
-            position: relative;
-            background-color: rgba(255, 255, 255, 0.05);
-
-            &--highlighted {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-            &:hover:not(&--on) {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-            &--on {
-                background-color: rgba(255, 255, 255, 0.5);
-            }
-            &--active {
-                background-color: var(--theme-2);
-            }
-
-            &.mouseIsDown:hover {
-                background-color: rgba(255, 255, 255, 0.5);
-            }
         }
     }
 </style>
