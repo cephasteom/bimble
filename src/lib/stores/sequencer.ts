@@ -68,3 +68,19 @@ export const query: (division: number) => { [sequencerIndex: number]: Note[] } =
         [i]: s.filter((n) => n.position === division)
     }), {});
 };
+
+/**
+ * Does a note at a given position happen within a given division
+ * @param division - an integer denoting division of the bar
+ * @param position - a position within a cycle
+ * @returns 
+ */
+export const happensWithin = (division: number, position: number) => {
+    const div = division % (divisions * bars);
+    const pos = Math.floor((position % bars) * divisions);
+    return div === pos;
+};
+
+export const divisionToPosition = (division: number) => {
+    return (division / divisions);
+}

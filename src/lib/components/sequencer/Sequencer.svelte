@@ -1,7 +1,7 @@
 <script lang="ts">
     import { activeSequencer } from "$lib/stores/sequencer";
     import { t } from '$lib/stores/transport';
-    import { data, toggleNote, moveNote, divisions, bars, notes } from "$lib/stores/sequencer";
+    import { data, toggleNote, moveNote, divisions, bars, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencer";
     import Cell from "./Cell.svelte";
     import SVG from "../SVG.svelte";
 
@@ -24,8 +24,8 @@
 
     const handleMouseUp = (divisionIndex: number, noteIndex: number) => {
         startDivision === divisionIndex && startNote === noteIndex
-            ? toggleNote(id, divisionIndex, noteIndex)
-            : moveNote(id, startDivision, startNote, divisionIndex, noteIndex);
+            ? toggleNote(id, divisionToPosition(divisionIndex), noteIndex)
+            : moveNote(id, divisionToPosition(startDivision), startNote, divisionToPosition(divisionIndex), noteIndex);
         
         startDivision = -1;
         startNote = -1;
@@ -80,7 +80,7 @@
                         note={noteIndex}
                         row={(notes - noteIndex) + 1}
                         highlighted={!(Math.floor(divisionIndex / 4) % 2)}
-                        on={$data[id].some(n => n.position === divisionIndex && n.note === noteIndex)}
+                        on={$data[id].some(n => happensWithin(divisionIndex, n.position) && n.note === noteIndex)}
                         active={$t % (divisions * bars) === divisionIndex}
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
