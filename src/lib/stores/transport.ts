@@ -14,7 +14,7 @@ new Loop(time => {
     // get time pointer
     const nextT = get(t) + 1;
     // advance time pointer at scheduled time
-    draw.schedule(() => t.set(nextT), time);
+    draw.schedule(() => get(isPlaying) && t.set(nextT), time);
     // set transport bpm based on cps store
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
@@ -25,8 +25,8 @@ new Loop(time => {
 
 const play = () => transport.start('+0.1');
 const stop = () => {
-    t.set(-1);
     transport.stop(immediate());
+    t.set(-1);
 }
 
 isPlaying.subscribe(playing => playing

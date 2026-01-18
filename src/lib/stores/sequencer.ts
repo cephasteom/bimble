@@ -23,49 +23,49 @@ export const data = writable<SequencerData>(createInitialData());
 
 export const toggleNote = (
     sequencer: number,
-    division: number,
+    position: number,
     note: number,
     amp = 0.75,
     duration = 0.25
 ) => {
     data.update((sequencers) => {
         const notes = sequencers[sequencer];
-        const exists = notes.some(n => n.position === division && n.note === note);
+        const exists = notes.some(n => n.position === position && n.note === note);
 
         return {
             ...sequencers,
             [sequencer]: exists
-                ? notes.filter(n => !(n.position === division && n.note === note))
-                : notes.concat({ position: division, note, amp, duration })
+                ? notes.filter(n => !(n.position === position && n.note === note))
+                : notes.concat({ position: position, note, amp, duration })
         };
     });
 };
 
 export const moveNote = (
     sequencer: number,
-    fromDivision: number,
+    fromPosition: number,
     fromNote: number,
-    toDivision: number,
+    toPosition: number,
     toNote: number
 ) => {
     data.update((sequencers) => {
         const notes = sequencers[sequencer];
-        const note = notes.find(n => n.position === fromDivision && n.note === fromNote);
+        const note = notes.find(n => n.position === fromPosition && n.note === fromNote);
         if (!note) return sequencers;
 
         return {
             ...sequencers,
             [sequencer]: notes
-                .filter(n => !(n.position === fromDivision && n.note === fromNote))
-                .concat({ ...note, position: toDivision, note: toNote })
+                .filter(n => !(n.position === fromPosition && n.note === fromNote))
+                .concat({ ...note, position: toPosition, note: toNote })
         }
     });
 };
 
-export const query: (division: number) => { [sequencerIndex: number]: Note[] } = (division: number) => {
+export const query: (position: number) => { [sequencerIndex: number]: Note[] } = (position: number) => {
     return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => ({
         ...acc,
-        [i]: s.filter((n) => n.position === division)
+        [i]: s.filter((n) => n.position === position)
     }), {});
 };
 
