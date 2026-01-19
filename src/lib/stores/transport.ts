@@ -5,7 +5,7 @@ import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
 
-export const cps = writable(.5);
+export const cps = writable(.25);
 export const t = writable(-1); // time pointer in divisions
 export const startedAt = writable<number | null>(null);
 
@@ -44,7 +44,7 @@ new Loop(time => {
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
     // if metronome is enabled, play click sound
-    get(isMetronome) && !(nextT%4) && beepAt(delta);
+    get(isMetronome) && !(nextT%2) && beepAt(delta);
 
     const events = query(divisionToPosition(nextT));
     const conns = get(connections);
@@ -59,7 +59,11 @@ new Loop(time => {
         const timestamp = (delta * 1000);
 
         notes.forEach(({ note, amp, duration }) => {
-            midiOutput.playNote(note, { attack: amp, duration, time: timestamp });
+            midiOutput.playNote(note, { 
+                attack: amp, 
+                duration, 
+                time: `+${timestamp}`,
+            });
         });
     });
 
