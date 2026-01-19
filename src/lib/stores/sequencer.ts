@@ -5,6 +5,7 @@ export const divisions = 16;
 export const bars = 2;
 export const notes = 60;
 export const activeSequencer = writable<number | null>(0);
+export const quantize = writable(true);
 
 export type Note = {
     position: number; // in cycles

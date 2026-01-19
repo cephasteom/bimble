@@ -1,6 +1,6 @@
 import { getTransport, immediate, Loop, getDraw } from 'tone'
 import { writable, get } from 'svelte/store';
-import { bars, divisions, divisionToPosition, query } from './sequencer';
+import { bars, divisions, divisionToPosition, query, quantize } from './sequencer';
 import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
@@ -26,16 +26,18 @@ const draw = getDraw();
 
 isPlaying.subscribe(playing => {
     playing
-        ? startedAt.set(immediate() * 1000)
+        ? startedAt.set((immediate()) * 1000)
         : isRecording.set(false);
 });
 isRecording.subscribe(recording => recording && isPlaying.set(true));
 
 new Loop(time => {
     const delta = time - immediate()
-
+    
     // get time pointer
     const nextT = get(t) + 1;
+    const nextPosition = divisionToPosition(nextT);
+    const cycleDuration = (1/get(cps)) * 1000; // in ms
 
     // advance time pointer at scheduled time
     draw.schedule(() => get(isPlaying) && t.set(nextT), time);
@@ -44,7 +46,7 @@ new Loop(time => {
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
     // if metronome is enabled, play click sound
-    get(isMetronome) && !(nextT%2) && beepAt(delta);
+    get(isMetronome) && !(nextT%2) && beepAt(time);
 
     const events = query(divisionToPosition(nextT));
     const conns = get(connections);
@@ -54,22 +56,22 @@ new Loop(time => {
 
         const midiOutput = WebMidi.getOutputByName(output);
         if (!midiOutput) return;
-
-        // TODO: this always quantizes to the division start, consider note timing
-        const timestamp = (delta * 1000);
-
-        notes.forEach(({ note, amp, duration }) => {
+        
+        notes.forEach(({ position, note, amp, duration }) => {
+            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
+            const latencyCompensation = 115; // in ms, empirical value to offset scheduling latency
+            
             midiOutput.playNote(note, { 
                 attack: amp, 
                 duration, 
-                time: `+${timestamp}`,
+                time: `+${(delta * 1000) + (noteDelta - latencyCompensation)}`,
             });
         });
     });
 
 }, `${divisions}n`).start(0);
 
-const play = () => transport.start('+0.1');
+const play = () => transport.start();
 const stop = () => {
     transport.stop(immediate());
     t.set(-1);

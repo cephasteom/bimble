@@ -25,7 +25,7 @@ const addListeners = () => {
             Object.entries(get(connections))
                 .filter(([_, conn]) => conn.input === input.name)
                 .forEach(([sequencer, _]) => {
-                    const position = timeToPosition(immediate() * 1000);
+                    const position = timeToPosition((immediate()) * 1000);
                     addNote(
                         parseInt(sequencer),
                         position,
