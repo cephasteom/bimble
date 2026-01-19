@@ -1,14 +1,21 @@
-import { getTransport, immediate, Loop, getDraw } from 'tone'
+import { getTransport, immediate, Loop, getDraw, now } from 'tone'
 import { writable, get } from 'svelte/store';
-import { divisions, query } from './sequencer';
+import { bars, divisions, query } from './sequencer';
 
-export const cps = writable(.25);
+export const cps = writable(1/8);
 export const t = writable(-1); // time pointer in divisions
 export const isPlaying = writable(false);
+export const startedAt = writable<number | null>(null);
 export const toggleIsPlaying = () => isPlaying.update(p => !p);
 
 const transport = getTransport()
 const draw = getDraw();
+
+isPlaying.subscribe(playing => {
+    playing
+        ? startedAt.set((now() + 0.1) * 1000)
+        : null;
+});
 
 new Loop(time => {
     // get time pointer
@@ -48,3 +55,15 @@ export const mapTransportKeys = () => {
         window.removeEventListener('keydown', handleKeyDown);
     };
 };
+
+/**
+ * Convert a time in ms to a position within the cycle.
+ * @param time 
+ * @returns
+ */
+export function timeToPosition(time: number) {
+    const pointer = time - get(startedAt)!;
+    const cycleDuration = (1/get(cps)) * 1000; // in ms
+    const positionInCycle = (pointer % (cycleDuration * bars)) / cycleDuration;
+    return positionInCycle;
+}

@@ -1,26 +1,49 @@
 import { writable, get } from "svelte/store";
 import { WebMidi } from "webmidi";
-import { data } from "./sequencer";
+import { data, addNote } from "./sequencer";
+import { timeToPosition } from "./transport";
 
 export const inputs = writable<any[]>([]);
 export const outputs = writable<any[]>([]);
-
-WebMidi.enable().then(() => {
-    inputs.set(WebMidi.inputs.map(input => input.name));
-    outputs.set(WebMidi.outputs.map(output => output.name));
-});
-
 export const connections = writable<{[sequencer: number]: {input: string | null, output: string | null}}>(
     Object.keys(get(data)).reduce((acc, key) => ({ ...acc, [key]: { input: null, output: null } }), {})
 );
 
-connections.subscribe((conns) => console.log("MIDI Connections:", conns));
+const populate = () => {
+    inputs.set(WebMidi.inputs.map(input => input.name));
+    outputs.set(WebMidi.outputs.map(output => output.name));
+};
+
+WebMidi.enable().then(() => {
+    // Initial population of inputs and outputs
+    populate();
+
+    // Update inputs and outputs on connection/disconnection
+    WebMidi.addListener("disconnected", populate);
+    WebMidi.addListener("connected", populate);
+
+    // listen to input MIDI messages and route them to the appropriate sequencer
+    // TODO: handle this on disconnect/reconnect
+    WebMidi.inputs.forEach(input => {
+        input.addListener("noteon", (e) => {
+            Object.entries(get(connections))
+                .filter(([_, conn]) => conn.input === input.name)
+                .forEach(([sequencer, _]) => {
+                    const position = timeToPosition(e.timestamp);
+                    addNote(
+                        parseInt(sequencer),
+                        position,
+                        e.note.number,
+                        // @ts-ignore
+                        e.velocity || 0.75,
+                        0.25
+                    );
+                });
+        });
+    });
+});
 
 const connect = (type: "input" | "output", sequencer: number, device: string | null) => {
-    // check if any current connection is being used by another sequencer
-    // if not, remove listeners from the old device
-    // then, add listeners to the new device
-    // update the store
     connections.update((conns) => ({
         ...conns,
         [sequencer]: {

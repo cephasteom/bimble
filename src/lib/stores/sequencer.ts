@@ -21,6 +21,27 @@ export const data = writable<SequencerData>(
 );
 
 /**
+ * Add a note at position
+ */
+export const addNote = (
+    sequencer: number,
+    position: number,
+    note: number,
+    amp = 0.75,
+    duration = 0.25
+) => {
+    data.update((sequencers) => ({
+        ...sequencers,
+
+        [sequencer]: sequencers[sequencer]
+            // add note
+            .concat({ position, note, amp, duration })
+            // ensure unique position and note
+            .filter((n, i, arr) => arr.findIndex(o => o.position === n.position && o.note === n.note) === i)
+    }));
+};
+
+/**
  * Add a note if it doesn't exist at the given position/note, or remove it if it does
  * @param sequencer 
  * @param position 
