@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { activeSequencer } from "$lib/stores/sequencer";
+    import { activeSequencer, clearSequencer } from "$lib/stores/sequencer";
     import { inputs, outputs, connectInput, connectOutput, connections } from "$lib/stores/midi";
     import { t } from '$lib/stores/transport';
     import { data, toggleNote, moveNote, divisions, bars, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencer";
     import Cell from "./Cell.svelte";
-    import SVG from "../SVG.svelte";
+    import SVG from "$lib/components/SVG.svelte";
+    import Button from "$lib/components/Button.svelte";
 
     export let id: number;
     let currentNote = -1;
@@ -43,33 +44,40 @@
     $: collapsed = $activeSequencer !== id;
 </script>
 
-<div class="midi">
-    <div>
-        <label for="midi-input-{id}">MIDI In</label>
-        <select 
-            id="midi-input-{id}" 
-            on:change={(e) => connectInput(id, (e.target as HTMLInputElement).value)}
-            value={$connections[id]?.input}
-        >
-            <option value={null}>None</option>
-            {#each $inputs as input}
-                <option value={input}>{input}</option>
-            {/each}
-        </select>
+<div class="config">
+    <div class="midi">
+        <div>
+            <label for="midi-input-{id}">MIDI In</label>
+            <select 
+                id="midi-input-{id}" 
+                on:change={(e) => connectInput(id, (e.target as HTMLInputElement).value)}
+                value={$connections[id]?.input}
+            >
+                <option value={null}>None</option>
+                {#each $inputs as input}
+                    <option value={input}>{input}</option>
+                {/each}
+            </select>
+        </div>
+        <div>
+            <label for="midi-output-{id}">MIDI Out</label>
+            <select 
+                id="midi-output-{id}" 
+                on:change={(e) => connectOutput(id, (e.target as HTMLInputElement).value)}
+                value={$connections[id]?.output}
+            >
+                <option value={null}>None</option>
+                {#each $outputs as output}
+                    <option value={output}>{output}</option>
+                {/each}
+            </select>
+        </div>
     </div>
-    <div>
-        <label for="midi-output-{id}">MIDI Out</label>
-        <select 
-            id="midi-output-{id}" 
-            on:change={(e) => connectOutput(id, (e.target as HTMLInputElement).value)}
-            value={$connections[id]?.output}
-        >
-            <option value={null}>None</option>
-            {#each $outputs as output}
-                <option value={output}>{output}</option>
-            {/each}
-        </select>
-    </div>
+    <Button
+        onClick={() => clearSequencer(id)}
+    >
+        <SVG type="erase" />
+    </Button>
 </div>
 <section class="sequencer">
     <div class="sequencer__meta">
@@ -123,6 +131,10 @@
 </section>
 
 <style lang="scss">
+    .config {
+        display: flex;
+        justify-content: space-between;
+    }
     .midi {
         display: flex;
         gap: 1rem;

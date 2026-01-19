@@ -102,6 +102,18 @@ export const moveNote = (
 };
 
 /**
+ * Clear all notes from a sequencer
+ * @param sequencer 
+ */
+export const clearSequencer = (sequencer: number) => {
+    data.update((sequencers) => ({
+        ...sequencers,
+        [sequencer]: []
+    }));
+    localStorage.setItem("bs.sequencerData", JSON.stringify(get(data)));
+};
+
+/**
  * Query notes at a given position across all sequencers
  * TODO: not quite right - should be able to accept positions not exactly on division boundaries
  * @param position 

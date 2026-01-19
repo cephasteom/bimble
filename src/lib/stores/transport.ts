@@ -16,7 +16,10 @@ export const isRecording = writable(false);
 export const toggleIsRecording = () => isRecording.update(r => !r);
 
 export const isMetronome = writable(false);
-export const toggleIsMetronome = () => isMetronome.update(m => !m);
+export const toggleIsMetronome = () => {
+    isMetronome.update(m => !m);
+    localStorage.setItem("bs.isMetronome", JSON.stringify(get(isMetronome)));
+};
 
 const transport = getTransport()
 const draw = getDraw();
