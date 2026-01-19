@@ -1,6 +1,8 @@
 import { getTransport, immediate, Loop, getDraw, now } from 'tone'
 import { writable, get } from 'svelte/store';
-import { bars, divisions, query } from './sequencer';
+import { bars, divisions, divisionToPosition, query } from './sequencer';
+import { connections } from './midi';
+import { WebMidi } from 'webmidi';
 
 export const cps = writable(.5);
 export const t = writable(-1); // time pointer in divisions
@@ -18,6 +20,8 @@ isPlaying.subscribe(playing => {
 });
 
 new Loop(time => {
+    const delta = time - immediate()
+
     // get time pointer
     const nextT = get(t) + 1;
     // advance time pointer at scheduled time
@@ -25,8 +29,22 @@ new Loop(time => {
     // set transport bpm based on cps store
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
-    const events = query(nextT);
-    // TODO: trigger events at scheduled time
+    const events = query(divisionToPosition(nextT));
+    const conns = get(connections);
+    Object.entries(events).forEach(([sequencerIndex, notes]) => {
+        const output = conns[parseInt(sequencerIndex)]?.output;
+        if (!output) return;
+
+        const midiOutput = WebMidi.getOutputByName(output);
+        if (!midiOutput) return;
+
+        // TODO: this always quantizes to the division start, consider note timing
+        const timestamp = (delta * 1000);
+
+        notes.forEach(({ note, amp, duration }) => {
+            midiOutput.playNote(note, { attack: amp, duration, time: timestamp });
+        });
+    });
 
 }, `${divisions}n`).start(0);
 

@@ -107,7 +107,7 @@ export const moveNote = (
 export const query: (position: number) => { [sequencerIndex: number]: Note[] } = (position: number) => {
     return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => ({
         ...acc,
-        [i]: s.filter((n) => n.position >= position || n.position < position + (1 / divisions))
+        [i]: s.filter((n) => n.position >= position && n.position < position + (1 / divisions))
     }), {});
 };
 
@@ -129,5 +129,5 @@ export const happensWithin = (division: number, position: number) => {
  * @returns 
  */
 export const divisionToPosition = (division: number) => {
-    return (division / divisions);
+    return ((division % (divisions * bars)) / divisions);
 }

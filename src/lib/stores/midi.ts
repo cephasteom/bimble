@@ -60,6 +60,7 @@ const connect = (type: "input" | "output", sequencer: number, device: string | n
 
 export const connectInput = (sequencer: number, inputName: string | null) => {
     connect("input", sequencer, inputName);
+    addListeners();
 };
 
 export const connectOutput = (sequencer: number, outputName: string | null) => {
