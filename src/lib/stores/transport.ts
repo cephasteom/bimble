@@ -2,7 +2,7 @@ import { getTransport, immediate, Loop, getDraw, now } from 'tone'
 import { writable, get } from 'svelte/store';
 import { bars, divisions, query } from './sequencer';
 
-export const cps = writable(1/8);
+export const cps = writable(.5);
 export const t = writable(-1); // time pointer in divisions
 export const isPlaying = writable(false);
 export const startedAt = writable<number | null>(null);

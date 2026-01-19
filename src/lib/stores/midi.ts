@@ -14,16 +14,10 @@ const populate = () => {
     outputs.set(WebMidi.outputs.map(output => output.name));
 };
 
-WebMidi.enable().then(() => {
-    // Initial population of inputs and outputs
-    populate();
-
-    // Update inputs and outputs on connection/disconnection
-    WebMidi.addListener("disconnected", populate);
-    WebMidi.addListener("connected", populate);
-
-    // listen to input MIDI messages and route them to the appropriate sequencer
-    // TODO: handle this on disconnect/reconnect
+const addListeners = () => {
+    // remove existing listeners
+    WebMidi.inputs.forEach(input => input.removeListener());
+    // add listeners
     WebMidi.inputs.forEach(input => {
         input.addListener("noteon", (e) => {
             Object.entries(get(connections))
@@ -41,6 +35,17 @@ WebMidi.enable().then(() => {
                 });
         });
     });
+};
+
+const configure = () => {
+    populate();
+    addListeners();
+}
+
+WebMidi.enable().then(() => {
+    configure();
+    WebMidi.addListener("connected", configure);
+    WebMidi.addListener("disconnected", configure);
 });
 
 const connect = (type: "input" | "output", sequencer: number, device: string | null) => {
