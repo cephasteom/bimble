@@ -5,7 +5,7 @@ import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
 
-export const cps = writable(.25);
+export const cps = writable(.5);
 export const t = writable(-1); // time pointer in divisions
 export const startedAt = writable<number | null>(null);
 
@@ -56,15 +56,21 @@ new Loop(time => {
 
         const midiOutput = WebMidi.getOutputByName(output);
         if (!midiOutput) return;
+
+        // stop all notes slightly before scheduling new ones to avoid stuck notes
+        Array.from({ length: 128 }, (_, i) => i)
+            .forEach(note => midiOutput.stopNote(note, {
+                time: `+${delta * 1000 - 10}`,
+            }));   
         
         notes.forEach(({ position, note, amp, duration }) => {
-            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
             const latencyCompensation = 115; // in ms, empirical value to offset scheduling latency
+            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration + latencyCompensation;
             
             midiOutput.playNote(note, { 
                 attack: amp, 
-                duration, 
-                time: `+${(delta * 1000) + (noteDelta - latencyCompensation)}`,
+                duration: duration * cycleDuration, 
+                time: `+${(delta * 1000) + (noteDelta)}`,
             });
         });
     });
@@ -90,6 +96,10 @@ export const mapTransportKeys = () => {
         }
         if (e.code === 'KeyR' && !e.metaKey && !e.ctrlKey && !e.altKey) {
             toggleIsRecording();
+            e.preventDefault();
+        }
+        if (e.code === 'KeyT' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+            toggleIsMetronome();
             e.preventDefault();
         }
     };

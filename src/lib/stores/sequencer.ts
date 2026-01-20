@@ -56,7 +56,7 @@ export const toggleNote = (
     position: number,
     note: number,
     amp = 0.75,
-    duration = 0.25
+    duration = 1/divisions
 ) => {
     data.update((sequencers) => {
         const notes = sequencers[sequencer];
@@ -89,13 +89,13 @@ export const moveNote = (
 ) => {
     data.update((sequencers) => {
         const notes = sequencers[sequencer];
-        const note = notes.find(n => n.position === fromPosition && n.note === fromNote);
+        const note = notes.find(n => floorPosition(n.position) === fromPosition && n.note === fromNote);
         if (!note) return sequencers;
 
         return {
             ...sequencers,
             [sequencer]: notes
-                .filter(n => !(n.position === fromPosition && n.note === fromNote))
+                .filter(n => !(floorPosition(n.position) === fromPosition && n.note === fromNote))
                 .concat({ ...note, position: toPosition, note: toNote })
         }
     });
@@ -146,4 +146,11 @@ export const happensWithin = (division: number, position: number) => {
  */
 export const divisionToPosition = (division: number) => {
     return ((division % (divisions * bars)) / divisions);
+}
+
+/**
+ * Floor position to nearest division, e.g. 0.51223 becomes 0.5
+ */
+function floorPosition(position: number) {
+    return Math.floor(position * divisions) / divisions
 }

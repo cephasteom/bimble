@@ -1,6 +1,6 @@
 import { writable, get } from "svelte/store";
 import { WebMidi } from "webmidi";
-import { data, addNote } from "./sequencer";
+import { data, addNote, divisions } from "./sequencer";
 import { isRecording, timeToPosition } from "./transport";
 import { immediate } from "tone";
 
@@ -25,17 +25,18 @@ const addListeners = () => {
             Object.entries(get(connections))
                 .filter(([_, conn]) => conn.input === input.name)
                 .forEach(([sequencer, _]) => {
-                    const position = timeToPosition((immediate()) * 1000);
+                    const position = timeToPosition(immediate() * 1000);
                     addNote(
                         parseInt(sequencer),
                         position,
                         e.note.number,
                         // @ts-ignore
                         e.velocity || 0.75,
-                        0.25
+                        1/divisions
                     );
                 });
         });
+        // TODO: handle noteoffs for durations
     });
 };
 
