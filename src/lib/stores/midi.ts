@@ -28,16 +28,16 @@ const addListeners = () => {
         input.addListener("noteon", (e) => {
             if(!get(isRecording)) return;
             const position = timeToPosition(immediate() * 1000);
-                activeNotes = [
-                    ...activeNotes,
-                    {
-                        position,
-                        note: e.note.number,
-                        // @ts-ignore
-                        amp: e.velocity,
-                        duration: 0 // to be updated on noteoff
-                    }
-                ];
+            activeNotes = [
+                ...activeNotes,
+                {
+                    position,
+                    note: e.note.number,
+                    // @ts-ignore
+                    amp: e.velocity,
+                    duration: 0 // to be updated on noteoff
+                }
+            ];
         });
         
         input.addListener("noteoff", (e) => {
