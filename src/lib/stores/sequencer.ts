@@ -6,6 +6,7 @@ export const bars = 2;
 export const notes = 127 - 36;
 export const activeSequencer = writable<number | null>(null);
 export const quantize = writable(true);
+export const timeFunctions = writable({} as Record<number, (t: number, c: number) => number>);
 
 export type Note = {
     position: number; // in cycles
@@ -115,19 +116,22 @@ export const clearSequencer = (sequencer: number) => {
 };
 
 /**
- * Query notes at a given position across all sequencers
+ * Query notes at a given division across all sequencers
  * @param position 
  * @returns 
  */
-export const query: (position: number) => { [sequencerIndex: number]: Note[] } = (position: number) => {
-    return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => ({
+export const query: (division: number) => { [sequencerIndex: number]: Note[] } = (division: number) => {
+    return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => {
+        const func = get(timeFunctions)[i] || ((t: number) => t);
+        const position = divisionToPosition(func(division, divisions * bars));
+        return {
         ...acc,
         [i]: s.filter((n) => 
             // note happens on or after position
             n.position >= position 
             // but before next division
             && n.position < floorPosition(position) + (1 / divisions))
-    }), {});
+    }}, {});
 };
 
 /**

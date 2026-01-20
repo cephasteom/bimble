@@ -1,17 +1,24 @@
 <script lang="ts">
     import '/node_modules/normalize.css/normalize.css';
     import '$lib/styles.css';
-
-    import Sequencer from '$lib/components/sequencer/Sequencer.svelte';
-    import { sequencers } from '$lib/stores/sequencer';
-    import Transport from '$lib/components/transport/Transport.svelte';
     import { onMount } from 'svelte';
     import { loadAllStoreData } from '$lib/stores/localstorage';
+    import { initCodeListeners } from '$lib/stores/code';
+    import { sequencers } from '$lib/stores/sequencer';
+    
+    import Sequencer from '$lib/components/sequencer/Sequencer.svelte';
+    import Transport from '$lib/components/transport/Transport.svelte';
+    import Editor from '$lib/components/editor/Editor.svelte';
 
-    onMount(() => loadAllStoreData());
+
+    onMount(() => {
+        loadAllStoreData()
+        initCodeListeners();
+    });
 </script>
 
 <main>
+    <Editor />
     <Transport />
     
     <div class="sequencers">
@@ -23,10 +30,9 @@
 
 <style lang="scss">
     main {
-        padding: 1rem;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 2rem;
     }
 
     .sequencers {

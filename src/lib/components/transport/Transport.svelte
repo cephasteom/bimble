@@ -5,7 +5,7 @@
     import { onMount } from 'svelte';
 
     onMount(() => {
-        return mapTransportKeys();
+        // return mapTransportKeys();
     });
 </script>
 

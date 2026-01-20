@@ -1,8 +1,8 @@
 <script lang="ts">
     import { activeSequencer, clearSequencer } from "$lib/stores/sequencer";
     import { inputs, outputs, connectInput, connectOutput, connections } from "$lib/stores/midi";
-    import { t } from '$lib/stores/transport';
-    import { data, toggleNote, moveNote, divisions, bars, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencer";
+    import { t, c } from '$lib/stores/transport';
+    import { data, toggleNote, moveNote, divisions, bars, notes, happensWithin, divisionToPosition, timeFunctions } from "$lib/stores/sequencer";
     import Cell from "./Cell.svelte";
     import SVG from "$lib/components/SVG.svelte";
     import Button from "$lib/components/Button.svelte";
@@ -44,6 +44,7 @@
     };
 
     $: collapsed = $activeSequencer !== id;
+    $: timeFunction = $timeFunctions[id] || ((t: number, c: number) => t);
 </script>
 
 <div class="config">
@@ -121,7 +122,7 @@
                         row={(notes - noteIndex) + 1}
                         highlighted={!(Math.floor(divisionIndex / 4) % 2)}
                         on={$data[id].some(n => happensWithin(divisionIndex, n.position) && (collapsed || n.note === noteIndex))}   
-                        active={$t % (divisions * bars) === divisionIndex}
+                        active={timeFunction($t, $c) % (divisions * bars) === divisionIndex}
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
                         handleMouseUp={handleMouseUp}

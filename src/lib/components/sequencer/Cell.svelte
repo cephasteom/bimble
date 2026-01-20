@@ -46,8 +46,8 @@
     &--on {
         background-color: rgba(255, 255, 255, 0.5);
     }
-    &--active:not(&--on) {
-        background-color: rgba(0, 0, 0, 0.01);
+    &--active {
+        background-color: var(--theme-2);
     }
 
     &.mouseIsDown:hover {

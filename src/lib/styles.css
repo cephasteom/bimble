@@ -20,7 +20,22 @@ body {
 
 main {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     max-width: 1600px;
     max-height: 1000px;
+}
+
+.prism-code-editor {
+    min-height: 16rem;
+    background-color: var(--theme-blue-medium);
+    padding: 1rem 0.5rem;
+}
+
+/* Reset padding and margin so that the editor is agnostic to surrounding styles */
+.prism-code-editor > .pce-wrapper {
+    margin: 0;
+}
+
+.pce-line, .pce-textarea {
+    padding: 0;
 }

@@ -7,6 +7,7 @@ import { beepAt } from '$lib/sound/utils';
 
 export const cps = writable(.5);
 export const t = writable(-1); // time pointer in divisions
+export const c = writable(0); // cycle pointer in bars
 export const startedAt = writable<number | null>(null);
 
 export const isPlaying = writable(false);
@@ -36,20 +37,26 @@ new Loop(time => {
     
     // get time pointer
     const nextT = get(t) + 1;
+    const nextC = Math.floor(nextT / (divisions * bars));
     const nextPosition = divisionToPosition(nextT);
     const cycleDuration = (1/get(cps)) * 1000; // in ms
 
-    // advance time pointer at scheduled time
-    draw.schedule(() => get(isPlaying) && t.set(nextT), time);
+    // advance time pointers at scheduled time
+    draw.schedule(() => {
+        if(!get(isPlaying)) return 
+        t.set(nextT)
+        c.set(nextC);
+    }, time);
 
     // set transport bpm based on cps store
     transport.bpm.setValueAtTime(240 * get(cps), time);
 
     // if metronome is enabled, play click sound
-    get(isMetronome) && !(nextT%2) && beepAt(time);
+    get(isMetronome) && !(nextT%4) && beepAt(time);
 
-    const events = query(divisionToPosition(nextT));
+    const events = query(nextT);
     const conns = get(connections);
+
     Object.entries(events).forEach(([sequencerIndex, notes]) => {
         const output = conns[parseInt(sequencerIndex)]?.output;
         if (!output) return;
