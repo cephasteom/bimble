@@ -5,7 +5,7 @@ export const divisions = 16;
 export const bars = 2;
 export const notes = 127 - 36;
 export const activeSequencer = writable<number | null>(null);
-export const quantize = writable(true);
+export const quantize = writable(false);
 export const timeFunctions = writable({} as Record<number, (t: number, c: number) => number>);
 
 export type Note = {
@@ -158,6 +158,6 @@ export const divisionToPosition = (division: number) => {
 /**
  * Floor position to nearest division, e.g. 0.51223 becomes 0.5
  */
-function floorPosition(position: number) {
+export function floorPosition(position: number) {
     return Math.floor(position * divisions) / divisions
 }

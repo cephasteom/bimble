@@ -1,11 +1,11 @@
 import { getTransport, immediate, Loop, getDraw } from 'tone'
 import { writable, get } from 'svelte/store';
-import { bars, divisions, divisionToPosition, query, quantize } from './sequencer';
+import { bars, divisions, divisionToPosition, query, quantize, floorPosition } from './sequencer';
 import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
 
-export const cps = writable(.5);
+export const cps = writable(.25);
 export const t = writable(-1); // time pointer in divisions
 export const c = writable(0); // cycle pointer in bars
 export const startedAt = writable<number | null>(null);
@@ -65,8 +65,7 @@ new Loop(time => {
         if (!midiOutput) return;
         
         notes.forEach(({ position, note, amp, duration }) => {
-            const latencyCompensation = 115; // in ms, empirical value to offset scheduling latency
-            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration + latencyCompensation;
+            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
             
             midiOutput.playNote(note, { 
                 attack: amp, 
@@ -115,9 +114,9 @@ export const mapTransportKeys = () => {
  * @param time 
  * @returns
  */
-export function timeToPosition(time: number) {
+export function timeToPosition(time: number, quantize: boolean = true) {
     const pointer = time - get(startedAt)!;
     const cycleDuration = (1/get(cps)) * 1000; // in ms
     const positionInCycle = (pointer % (cycleDuration * bars)) / cycleDuration;
-    return positionInCycle;
+    return quantize ? floorPosition(positionInCycle) : positionInCycle;
 }
