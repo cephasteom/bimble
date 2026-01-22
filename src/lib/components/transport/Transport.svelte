@@ -10,40 +10,54 @@
 </script>
 
 <div class="transport">
-    <Button
-        onClick={toggleIsPlaying}
-    >
-        {#if $isPlaying}
-            <SVG type="stop" />
-        {:else}
-            <SVG type="play" />
-        {/if}
-    </Button>
+    <div class="transport__item">
+        <Button
+            onClick={toggleIsPlaying}
+        >
+            {#if $isPlaying}
+                <SVG type="stop" />
+            {:else}
+                <SVG type="play" />
+            {/if}
+        </Button>
+    </div>
     
-    <Button
-        onClick={toggleIsRecording}
-    >
-        {#if $isRecording}
-            <SVG type="circle--solid" />
-        {:else}
-            <SVG type="circle" />
-        {/if}
-    </Button>
+    <div class="transport__item">
+        <Button
+            onClick={toggleIsRecording}
+        >
+            {#if $isRecording}
+                <SVG type="circle--solid" />
+            {:else}
+                <SVG type="circle" />
+            {/if}
+        </Button>
+    </div>
 
-    <Button
-        onClick={toggleIsMetronome}
-    >
-        {#if $isMetronome}
-            <SVG type="bell--solid" />
-        {:else}
-            <SVG type="bell" />
-        {/if}
-    </Button>
+    <div class="transport__item">
+        <Button
+            onClick={toggleIsMetronome}
+        >
+            {#if $isMetronome}
+                <SVG type="bell--solid" />
+            {:else}
+                <SVG type="bell" />
+            {/if}
+        </Button>
+    </div>
 </div>
 
-<style>
+<style lang="scss">
     .transport {
         display: flex;
-        gap: 0.5rem;
+        gap: 1.5rem;
+        background-color: var(--black-lighter);
+        border-radius: 15px;
+        padding: .75rem 1.5rem;
+
+        &__item {
+            padding-right: 1.5rem;
+            border-right: 1px solid var(--grey-lighter);
+        }
     }
 </style>

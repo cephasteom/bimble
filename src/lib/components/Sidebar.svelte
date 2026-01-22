@@ -15,7 +15,7 @@
 
 <style lang="scss">
     .sidebar {
-        padding: 1.5rem;
+        padding: 8rem 1.5rem 1.5rem 1.5rem;
         background-color: var(--black-lighter);
         min-height: calc(100vh - var(--header-height));
         box-sizing: border-box;

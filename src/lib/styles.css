@@ -6,6 +6,8 @@
     --theme-5: #56a3a6ff;
     --black: #000000;
     --black-lighter: #0D0D0D;
+    --grey: #282828;
+    --grey-lighter: #363636; 
     --header-height: 64.5px;
 }
 
@@ -23,7 +25,7 @@ body {
     box-sizing: border-box;
     position: fixed;
     font-family: system-ui, sans-serif;
-    background-color: var(--theme-1);
+    background-color: var(--grey);
     width: 100vw;
     overflow: hidden;
     font-family: 'NATS Regular', sans-serif;

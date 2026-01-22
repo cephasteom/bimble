@@ -45,5 +45,8 @@
     .app {
         width: 100%;
         padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 </style>
