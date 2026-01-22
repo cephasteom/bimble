@@ -136,7 +136,7 @@
         flex-direction: column;
         gap: 1rem;
         background-color: var(--black-lighter);
-        padding: var(--spacer);
+        padding: 1rem var(--spacer);
         border-radius: var(--border-radius);
         border: 2px solid;
         max-height: 500px;
@@ -144,7 +144,7 @@
         overflow: scroll;
 
         &--collapsed {
-            max-height: 27.6px; // header height;
+            max-height: 23px; // header height;
             overflow: hidden;
         }
 

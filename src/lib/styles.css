@@ -30,20 +30,21 @@ body {
     background-color: var(--grey);
     width: 100vw;
     font-family: 'NATS Regular', sans-serif;
-    letter-spacing: 0.15rem;
 }
 
 h1,h2,h3,h4,h5,h6,p,label,span {
     text-transform: uppercase;
+    letter-spacing: 0.1rem;
 }
 
 h1 {
     font-size: 2rem;
     margin: 0;
+    letter-spacing: .3rem;
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin: 0;
 }
 
