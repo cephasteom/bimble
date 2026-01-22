@@ -6,8 +6,8 @@ import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
 
 export const bpm = writable(120); // bpm
-export const timeSignature = writable<[number, number]>([4, 4]); // [numerator, denominator]
-export const cps = derived([bpm, timeSignature], ([$bpm, $timeSignature]) => $bpm / $timeSignature[0] / 60); // bpm / timesignature denominator (4) / 60
+export const timeSignature = writable<number>(4); // denominator of time signature
+export const cps = derived([bpm, timeSignature], ([$bpm, $timeSignature]) => $bpm / $timeSignature / 60); // bpm / timesignature denominator (4) / 60
 export const t = writable(-1); // time pointer in divisions
 export const c = writable(0); // cycle pointer in bars
 export const startedAt = writable<number | null>(null);

@@ -1,10 +1,15 @@
 <script lang="ts">
     import Button from '$lib/components/Button.svelte';
-    import { isPlaying, toggleIsPlaying, isRecording, toggleIsRecording, mapTransportKeys, toggleIsMetronome, isMetronome } from '$lib/stores/transport';
+    import { 
+        isPlaying, toggleIsPlaying, 
+        isRecording, toggleIsRecording, 
+        isMetronome, toggleIsMetronome,
+        mapTransportKeys, 
+        bpm, timeSignature
+    } from '$lib/stores/transport';
     import SVG from '$lib/components/SVG.svelte';
     import { onMount } from 'svelte';
     import Input from '$lib/components/Input.svelte';
-    import { bpm } from '$lib/stores/transport';
 
     onMount(() => {
         return mapTransportKeys();
@@ -32,6 +37,13 @@
         <Input 
             bind:value={$bpm} 
             units="BPM" 
+        />
+    </div>
+
+    <div class="transport__item">
+        <Input 
+            bind:value={$timeSignature} 
+            units=" / 4" 
         />
     </div>
 

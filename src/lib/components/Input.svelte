@@ -10,13 +10,15 @@
     let height: number = 0;
 
     function handleKeydown(event: KeyboardEvent) {
-        event.key === 'Enter' && (showInput = false);
+        (event.key === 'Enter' || event.key === 'Escape') && (showInput = false);
     }
 
     onMount(() => {
-        width = container.clientWidth;
-        height = container.clientHeight;
-        console.log('Input dimensions:', width, height);
+        // wait for layout to settle
+        setTimeout(() => {
+            width = container.getBoundingClientRect().width;
+            height = container.getBoundingClientRect().height;
+        }, 200);
     });
 </script>
 
@@ -43,7 +45,6 @@
             }}
             label={`${value} ${units}`}
             fontSize="1.5rem"
-            width="126px"
         >
         </Button>
     {/if}
