@@ -194,14 +194,13 @@
         &__piano {
             display: grid;
             gap: 2px;
-            grid-template-rows: repeat(notes, .5fr);
             grid-template-columns: 1fr;
-            width: 1.5rem;
+            width: 3rem;
             margin-top: -3px;
             
             &-key {
-                background-color: rgba(255, 255, 255, 0.05);
-                border: 0;
+                background-color: var(--grey);
+                border-right: 3px solid var(--black-lighter);
                 box-sizing: border-box;
                 height: 1.5rem;
                 display: flex;
@@ -211,7 +210,7 @@
                 color: white;
                 
                 &--accidental {
-                    background-color: rgba(0, 0, 0, 0.05);
+                    background-color: var(--grey-darker);
                 }
 
                 &--active {
