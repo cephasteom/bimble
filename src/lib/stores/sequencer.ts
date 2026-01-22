@@ -1,6 +1,6 @@
 import { get, writable } from "svelte/store";
 
-export const sequencers = 1;
+export const sequencers = 3;
 export const divisions = 16;
 export const bars = 2;
 export const notes = 127 - 36;

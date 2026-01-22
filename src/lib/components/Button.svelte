@@ -2,9 +2,10 @@
     export let onClick = () => {};
     export let width = 'auto';
     export let label = '';
+    export let padding = '0.5rem';
 </script>
 
-<button class="btn" on:click={onClick} style="width: {width};">
+<button class="btn" on:click={onClick} style="width: {width}; padding: {padding};">
     <slot></slot>
     {#if label}
         <span>{label}</span>
@@ -13,7 +14,6 @@
 
 <style lang="scss">
     .btn {
-        padding: 0.5rem;
         border: none;
         background-color: transparent;
         color: white;

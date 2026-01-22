@@ -15,7 +15,6 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        gap: .5rem;
-        // padding: 1rem 2rem;
+        gap: var(--spacer);
     }
 </style>

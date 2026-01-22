@@ -12,13 +12,8 @@
     let mouseIsDown = false;
     let startDivision = -1;
     let startNote = -1;
-    let contentElement: HTMLElement;
 
-    const toggle = () => {
-        activeSequencer.update(activeId => 
-            activeId === id ? null : id);
-        contentElement && (contentElement.scrollTop = 0);
-    }
+    const toggle = () => activeSequencer.update(activeId => activeId === id ? null : id);
 
     const handleMouseDown = (divisionIndex: number, noteIndex: number) => {
         mouseIsDown = true;
@@ -44,15 +39,23 @@
     };
 
     $: collapsed = $activeSequencer !== id;
+    $: colour = `var(--theme-${(id % 5) + 1})`;
     $: timeFunction = $timeFunctions[id] || ((t: number, c: number) => t);
 </script>
 
 <section 
     class="sequencer" 
-    style="border-color: var(--theme-{(id % 5) + 1});"
+    class:sequencer--collapsed={collapsed}
+    style="border-color: {colour};"
 >
     <header class="sequencer__header">
         <h2>Sequencer 0{id + 1}</h2>
+        <Button
+            onClick={toggle}
+            padding={'0'}
+        >
+            <SVG type={collapsed ? 'down' : 'up'} fill={colour} />
+        </Button>
     </header>
     <div class="config">
         <div class="midi">
@@ -90,10 +93,7 @@
         </Button>
     </div>
 
-    <div 
-        class="sequencer__content"
-        bind:this={contentElement}
-    >
+    <div class="sequencer__content">
         <div class="sequencer__piano">
             {#each Array(notes) as _, noteIndex}
                 <div 
@@ -117,7 +117,7 @@
                         note={noteIndex}
                         row={(notes - noteIndex) + 1}
                         highlighted={!(Math.floor(divisionIndex / 4) % 2)}
-                        on={$data[id].some(n => happensWithin(divisionIndex, n.position) && (collapsed || n.note === noteIndex))}   
+                        on={$data[id].some(n => happensWithin(divisionIndex, n.position) && n.note === noteIndex)}   
                         active={timeFunction($t, $c) % (divisions * bars) === divisionIndex}
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
@@ -132,7 +132,6 @@
 
 <style lang="scss">
     .sequencer {
-        margin-bottom: var(--spacer);
         display: flex;
         flex-direction: column;
         gap: 1rem;
@@ -140,8 +139,20 @@
         padding: var(--spacer);
         border-radius: var(--border-radius);
         border: 2px solid;
+        max-height: 500px;
+        transition: max-height 0.3s ease-in-out;
+        overflow: scroll;
+
+        &--collapsed {
+            max-height: 27.6px; // header height;
+            overflow: hidden;
+        }
 
         &__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
             h2 {
                 margin: 0;
                 color: white;
@@ -177,14 +188,7 @@
             box-sizing: border-box;
             display: grid;
             grid-template-columns: auto 1fr;
-            max-height: calc(24 * (1.5em + 2px) - 2px);
-            transition: max-height 0.15s ease;
             overflow: scroll;
-
-            &--collapsed {
-                transition: max-height 0.15s ease;
-                max-height: 1.5rem;
-            }
         }
 
         &__piano {

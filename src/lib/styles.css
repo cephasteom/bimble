@@ -29,7 +29,6 @@ body {
     font-family: system-ui, sans-serif;
     background-color: var(--grey);
     width: 100vw;
-    overflow: hidden;
     font-family: 'NATS Regular', sans-serif;
     letter-spacing: 0.15rem;
 }
