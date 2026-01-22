@@ -16,5 +16,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--spacer);
+        overflow: scroll;
+        max-height: calc(100vh - var(--header-height));
     }
 </style>

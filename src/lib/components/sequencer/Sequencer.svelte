@@ -142,8 +142,8 @@
         padding: 1rem var(--spacer);
         border-radius: var(--border-radius);
         border: 1.5px solid;
-        max-height: 500px;
-        transition: max-height 0.3s ease-in-out;
+        max-height: 800px;
+        transition: max-height 0.2s ease;
         overflow: scroll;
 
         &--collapsed {

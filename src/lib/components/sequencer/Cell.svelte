@@ -14,7 +14,7 @@
 
 <button 
     class="cell" 
-    style="grid-column: {division + 1}; grid-row: {row}; background-color: {on ? colour : ''};"
+    style="grid-column: {division + 1}; grid-row: {row}; background-color: {on || active ? colour : ''};"
     class:cell--highlighted={highlighted}
     class:cell--on={on}
     class:cell--active={active}
@@ -43,9 +43,6 @@
     }
     &:hover:not(&--on) {
         background-color: rgba(255, 255, 255, 0.1);
-    }
-    &--active {
-        background-color: var(--theme-2);
     }
 
     &--on {
