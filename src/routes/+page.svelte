@@ -6,9 +6,11 @@
     import { initCodeListeners } from '$lib/stores/code';
     import { sequencers } from '$lib/stores/sequencer';
     
-    import Sequencer from '$lib/components/sequencer/Sequencer.svelte';
     import Transport from '$lib/components/transport/Transport.svelte';
     import Editor from '$lib/components/editor/Editor.svelte';
+    import Sequencers from '$lib/components/sequencer/Sequencers.svelte';
+    import Header from '$lib/components/Header.svelte';
+    import Sidebar from '$lib/components/Sidebar.svelte';
 
     onMount(() => {
         loadAllStoreData()
@@ -16,29 +18,32 @@
     });
 </script>
 
+
 <main>
-    <Editor />
-    <Transport />
-    
-    <div class="sequencers">
-        {#each Array(sequencers) as _, key}
-            <Sequencer id={key} />
-        {/each}
+    <Header />
+    <div class="layout">
+        <!-- <Editor /> -->
+        <Sidebar />
+        <div class="app">
+            <Transport />
+            <Sequencers />
+        </div>
     </div>
 </main>
 
 <style lang="scss">
     main {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+        min-height: 100vh;
     }
-
-    .sequencers {
-        width: 100%;
+    .layout {
+        min-height: calc(100vh - var(--header-height));
         box-sizing: border-box;
         display: flex;
-        flex-direction: column;
-        gap: .5rem;
+        align-items: flex-start;
+    }
+
+    .app {
+        width: 100%;
+        padding: 1.5rem;
     }
 </style>

@@ -20,12 +20,20 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M224 0c-17.7 0-32 14.3-32 32l0 3.2C119 50 64 114.6 64 192l0 21.7c0 48.1-16.4 94.8-46.4 132.4L7.8 358.3C2.7 364.6 0 372.4 0 380.5 0 400.1 15.9 416 35.5 416l376.9 0c19.6 0 35.5-15.9 35.5-35.5 0-8.1-2.7-15.9-7.8-22.2l-9.8-12.2C400.4 308.5 384 261.8 384 213.7l0-21.7c0-77.4-55-142-128-156.8l0-3.2c0-17.7-14.3-32-32-32zM162 464c7.1 27.6 32.2 48 62 48s54.9-20.4 62-48l-124 0z"/></svg>
 {:else if type === 'erase'}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M178.5 416l123 0 65.3-65.3-173.5-173.5-126.7 126.7 112 112zM224 480l-45.5 0c-17 0-33.3-6.7-45.3-18.7L17 345C6.1 334.1 0 319.4 0 304s6.1-30.1 17-41L263 17C273.9 6.1 288.6 0 304 0s30.1 6.1 41 17L527 199c10.9 10.9 17 25.6 17 41s-6.1 30.1-17 41l-135 135 120 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-288 0z"/></svg>
+{:else if type === 'piano'}
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.75" y="0.75" width="26.5" height="26.5" rx="2.25" stroke="white" stroke-width="1.5"/>
+        <path d="M7 1H12V17C12 17.5523 11.5523 18 11 18H8C7.44772 18 7 17.5523 7 17V1Z" fill="white"/>
+        <path d="M16 1H21V17C21 17.5523 20.5523 18 20 18H17C16.4477 18 16 17.5523 16 17V1Z" fill="white"/>
+        <line x1="9.75" y1="18" x2="9.75" y2="27" stroke="white" stroke-width="1.5"/>
+        <line x1="18.75" y1="18" x2="18.75" y2="27" stroke="white" stroke-width="1.5"/>
+    </svg>
 {/if}
 
 <style lang="scss">
     svg {
-        width: 0.75rem;
+        width: 2rem;
         height: auto;
-        fill: white;
+        // fill: white;
     }
 </style>

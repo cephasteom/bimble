@@ -1,3 +1,10 @@
+TODO:
+* Transport
+* sidebar
+* piano roll
+* make some music / sound design
+
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
