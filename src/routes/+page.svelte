@@ -37,16 +37,17 @@
         box-sizing: border-box;
         display: flex;
         align-items: flex-start;
+        overflow-x: scroll;
     }
 
     .app {
         width: 100%;
+        height: calc(100vh - var(--header-height));
         padding: var(--spacer);
         display: flex;
         flex-direction: column;
         gap: var(--spacer);
-        height: calc(100vh - var(--header-height));
         box-sizing: border-box;
-        overflow: scroll;
+        min-width: 1000px;
     }
 </style>
