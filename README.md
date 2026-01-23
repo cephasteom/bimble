@@ -1,5 +1,5 @@
 TODO:
-* Change divisions when change time signature
+* Timing of capture not correct on different timesignatures
 * midi settings
 * make some music / sound design
 

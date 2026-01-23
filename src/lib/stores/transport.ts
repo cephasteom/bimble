@@ -11,7 +11,6 @@ export const cps = derived([bpm, timeSignature], ([$bpm, $timeSignature]) => $bp
 export const t = writable(-1); // time pointer in divisions
 export const c = writable(0); // cycle pointer in bars
 export const startedAt = writable<number | null>(null);
-
 export const isPlaying = writable(false);
 export const toggleIsPlaying = () => isPlaying.update(p => !p);
 
@@ -34,55 +33,63 @@ isPlaying.subscribe(playing => {
 });
 isRecording.subscribe(recording => recording && isPlaying.set(true));
 
-new Loop(time => {
-    const delta = time - immediate()
-    
-    // get time pointer
-    const nextT = get(t) + 1;
-    const nextC = Math.floor(nextT / (get(divisions) * bars));
-    const nextPosition = divisionToPosition(nextT);
-    const cycleDuration = (1/get(cps)) * 1000; // in ms
+let loop: Loop;
+function createLoop() {
+    loop && loop.dispose();
 
-    // advance time pointers at scheduled time
-    draw.schedule(() => {
-        if(!get(isPlaying)) return 
-        t.set(nextT)
-        c.set(nextC);
-    }, time);
-
-    // set transport bpm based on cps store
-    transport.bpm.setValueAtTime(240 * get(cps), time);
-    // set time signature
-    transport.timeSignature = [get(timeSignature), 4];
-
-    // if metronome is enabled, play click sound
-    get(isMetronome) && !(nextT%4) && beepAt(time);
-
-    const events = query(nextT);
-    const conns = get(connections);
-
-    Object.entries(events).forEach(([sequencerIndex, notes]) => {
-        if(get(data)[+sequencerIndex]?.muted) return;
-
-        const output = conns[+sequencerIndex]?.output;
-        if (!output) return;
-
-        const midiOutput = WebMidi.getOutputByName(output);
-        if (!midiOutput) return;
+    loop = new Loop(time => {
+        const delta = time - immediate()
+        const divs = get(divisions);
         
-        notes.forEach(({ position, note, amp, duration }) => {
-            // TODO: this doesn't work when t func is applied and quantize is off
-            const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
+        // get time pointer
+        const nextT = get(t) + 1;
+        const nextC = Math.floor(nextT / (divs * bars));
+        const nextPosition = divisionToPosition(nextT);
+        const cycleDuration = (1/get(cps)) * 1000; // in ms
+
+        // advance time pointers at scheduled time
+        draw.schedule(() => {
+            if(!get(isPlaying)) return 
+            t.set(nextT)
+            c.set(nextC);
+        }, time);
+
+        // set time signature
+        transport.timeSignature = +get(timeSignature);
+        // set transport bpm based on cps store
+        transport.bpm.setValueAtTime((+get(timeSignature) * 60) * get(cps), time);
+
+        // if metronome is enabled, play click sound
+        get(isMetronome) && !(nextT%4) && beepAt(time);
+
+        const events = query(nextT);
+        const conns = get(connections);
+
+        Object.entries(events).forEach(([sequencerIndex, notes]) => {
+            if(get(data)[+sequencerIndex]?.muted) return;
+
+            const output = conns[+sequencerIndex]?.output;
+            if (!output) return;
+
+            const midiOutput = WebMidi.getOutputByName(output);
+            if (!midiOutput) return;
             
-            midiOutput.playNote(note, { 
-                attack: amp, 
-                duration: duration * cycleDuration, 
-                time: `+${(delta * 1000) + (noteDelta)}`,
+            notes.forEach(({ position, note, amp, duration }) => {
+                // TODO: this doesn't work when t func is applied and quantize is off
+                const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
+                
+                midiOutput.playNote(note, { 
+                    attack: amp, 
+                    duration: duration * cycleDuration, 
+                    time: `+${(delta * 1000) + (noteDelta)}`,
+                });
             });
         });
-    });
 
-}, `${get(divisions)}n`).start(0);
+    }, `${get(divisions)}n`).start(0);
+}
+divisions.subscribe(() => createLoop());
+
 
 const play = () => transport.start();
 const stop = () => {
