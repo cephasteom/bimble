@@ -1,8 +1,8 @@
 TODO:
-* progress bar separate from step sequencer timing
 * midi settings
+* bytebeat string - in the data storage as a string, then evalled as a function
+* local storage of time sig, bpm, and bytebeat string
 * make some music / sound design
-* local storage of time sig and bpm
 
 
 # sv

@@ -1,7 +1,7 @@
 import { getTransport, immediate, Loop, getDraw } from 'tone'
 import { writable, get, derived } from 'svelte/store';
 import { timeSignature, bars, divisions } from '.';
-import { divisionToPosition, query, quantize, floorPosition, data } from './sequencers';
+import { divisionToPosition, query, floorPosition, data } from './sequencers';
 import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt } from '$lib/sound/utils';
@@ -68,6 +68,7 @@ function createLoop() {
 
         Object.entries(events).forEach(([sequencerIndex, notes]) => {
             if(get(data)[+sequencerIndex]?.muted) return;
+            const quantize = get(data)[+sequencerIndex]?.quantize ?? true;
 
             const output = conns[+sequencerIndex]?.output;
             if (!output) return;
@@ -77,7 +78,7 @@ function createLoop() {
             
             notes.forEach(({ position, note, amp, duration }) => {
                 // TODO: this doesn't work when t func is applied and quantize is off
-                const noteDelta = get(quantize) ? 0 : (position - nextPosition) * cycleDuration;
+                const noteDelta = quantize ? 0 : (position - nextPosition) * cycleDuration;
                 
                 midiOutput.playNote(note, { 
                     attack: amp, 

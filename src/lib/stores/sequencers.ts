@@ -2,9 +2,8 @@ import { get, writable } from "svelte/store";
 import { sequencers, bars, divisions } from ".";
 
 export const notes = 127 - 36;
-// TODO: move the below into the data
 export const activeSequencer = writable<number | null>(0);
-export const quantize = writable(true);
+// TODO: move the below into the data
 export const timeFunctions = writable({} as Record<number, (t: number, c: number) => number>);
 
 export type Note = {
@@ -15,9 +14,11 @@ export type Note = {
 };
 
 export type SequencerData = { [sequencerIndex: number]: {
+    quantize: boolean;
     record: boolean;
     muted: boolean;
-    notes: Note[] 
+    notes: Note[],
+    time: string
 } };
 
 export const data = writable<SequencerData>(
@@ -27,7 +28,9 @@ export const data = writable<SequencerData>(
             [s]: { 
                 record: false, 
                 muted: false,
-                notes: [] 
+                quantize: true,
+                notes: [],
+                time: "t"
             }
         }), {})
 );
@@ -167,7 +170,7 @@ export const clearSequencer = (sequencer: number) => {
  */
 export const query: (division: number) => { [sequencerIndex: number]: Note[] } = (division: number) => {
     return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => {
-        const func = get(timeFunctions)[i] || ((t: number) => t);
+        const func = get(timeFunctions)[i] || ((t: number) => t); // TODO: get from data
         const position = divisionToPosition(func(division, Math.floor(division / (get(divisions) * bars))));
         return {
         ...acc,

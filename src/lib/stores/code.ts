@@ -13,6 +13,7 @@ export const initCodeListeners = () => {
             eval(customEvent.detail.code);
 
             const scope = { 0: s0, 1: s1, 2: s2, 3: s3 };
+            
             timeFunctions.update(tf => ({
                 ...tf,
                 ...scope

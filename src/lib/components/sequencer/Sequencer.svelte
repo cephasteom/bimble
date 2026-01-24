@@ -2,15 +2,17 @@
     import { 
         activeSequencer, clearSequencer, 
         toggleRecord,
-        toggleMute
+        toggleMute,
+        timeFunctions
     } from "$lib/stores/sequencers";
     import { inputs, outputs, connectInput, connectOutput, connections } from "$lib/stores/midi";
     import { t, c } from '$lib/stores/transport';
-    import { data, toggleNote, moveNote, notes, happensWithin, divisionToPosition, timeFunctions } from "$lib/stores/sequencers";
+    import { data, toggleNote, moveNote, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencers";
     import { bars, divisions } from "$lib/stores/";
     import Cell from "./Cell.svelte";
     import SVG from "$lib/components/SVG.svelte";
     import Button from "$lib/components/Button.svelte";
+    import Input from "$lib/components/Input.svelte";
 
     export let id: number;
     let currentNote = -1;
@@ -60,6 +62,7 @@
     >
         <div>
             <h2>Sequencer 0{id + 1}</h2>
+            
             <Button
                 onClick={() => toggleRecord(id)}
                 padding={'0'}
@@ -70,8 +73,7 @@
                     width={'1.25rem'}
                 />
             </Button>
-        </div>
-        <div>
+
             <Button
                 onClick={() => toggleMute(id)}
                 padding={'0'}
@@ -82,6 +84,19 @@
                     width={'1.25rem'}
                 />
             </Button>
+
+            <Button
+                onClick={() => clearSequencer(id)}
+                padding={'0'}
+
+            >
+                <SVG 
+                    type="erase" 
+                    width={'1.25rem'}
+                />
+            </Button>
+        </div>
+        <div>
             <Button
                 onClick={toggle}
                 padding={'0'}
@@ -124,11 +139,6 @@
                 </select>
             </div>
         </div>
-        <Button
-            onClick={() => clearSequencer(id)}
-        >
-            <SVG type="erase" />
-        </Button>
     </div>
 
     <div class="sequencer__content">
@@ -193,6 +203,7 @@
             align-items: center;
             margin-bottom: 0.5rem;
             h2 {
+                width: 8.5rem;
                 margin: 0;
                 color: white;
             }
