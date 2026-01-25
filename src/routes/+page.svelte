@@ -9,6 +9,8 @@
     import Sequencers from '$lib/components/sequencer/Sequencers.svelte';
     import Header from '$lib/components/Header.svelte';
     import Sidebar from '$lib/components/Sidebar.svelte';
+    import About from '$lib/components/About.svelte';
+    import MIDISettings from '$lib/components/MIDISettings.svelte';
 
     onMount(() => {
         loadAllStoreData()
@@ -18,6 +20,11 @@
 
 
 <main>
+    <!-- Modals -->
+    <About />
+    <MIDISettings />
+
+    <!-- Main app -->
     <Header />
     <div class="layout">
         <Sidebar />

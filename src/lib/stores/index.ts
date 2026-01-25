@@ -5,3 +5,5 @@ export const bars = 2;
 export const timeSignature = writable<number>(4); // denominator of time signature
 
 export const divisions = derived(timeSignature, $timeSignature => $timeSignature * 4);
+
+export const aboutOpen = writable(false);

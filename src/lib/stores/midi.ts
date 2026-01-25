@@ -9,6 +9,7 @@ export const outputs = writable<any[]>([]);
 export const connections = writable<{[sequencer: number]: {input: string | null, output: string | null}}>(
     Object.keys(get(data)).reduce((acc, key) => ({ ...acc, [key]: { input: null, output: null } }), {})
 );
+export const midiSettingsOpen = writable(false);
 
 const populate = () => {
     inputs.set(WebMidi.inputs.map(input => input.name));
