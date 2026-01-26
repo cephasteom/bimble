@@ -71,6 +71,7 @@ function createLoop() {
             const quantize = get(data)[+sequencerIndex]?.quantize ?? true;
 
             const output = conns[+sequencerIndex]?.output;
+            const channel = conns[+sequencerIndex]?.outputChannel || 'all';
             if (!output) return;
 
             const midiOutput = WebMidi.getOutputByName(output);
@@ -79,12 +80,15 @@ function createLoop() {
             notes.forEach(({ position, note, amp, duration }) => {
                 // TODO: this doesn't work when t func is applied and quantize is off
                 const noteDelta = quantize ? 0 : (position - nextPosition) * cycleDuration;
-                
-                midiOutput.playNote(note, { 
+                let options: {[key: string]: any} = { 
                     attack: amp, 
                     duration: duration * cycleDuration, 
                     time: `+${(delta * 1000) + (noteDelta)}`,
-                });
+                }
+
+                channel !== 'all' && (options.channels = channel as number + 1);
+                
+                midiOutput.playNote(note, options);
             });
         });
 

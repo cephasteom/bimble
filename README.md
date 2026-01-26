@@ -1,5 +1,5 @@
 TODO:
-* midi settings
+* check midi settings are working in practice
 * bytebeat string - in the data storage as a string, then evalled as a function
 * local storage of time sig, bpm, and bytebeat string
 * make some music / sound design
