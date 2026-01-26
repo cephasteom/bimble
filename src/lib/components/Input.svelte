@@ -14,9 +14,7 @@
     
     function setSize() {
         if(!mirrorSpan || !inputElement) return;
-        console.log('setSize');
         mirrorSpan.textContent = `${value}`;
-        console.log('mirrorSpan width:', mirrorSpan.getBoundingClientRect());
         const width = mirrorSpan.getBoundingClientRect().width;
         inputElement.style.width = `${width}px`;
     }

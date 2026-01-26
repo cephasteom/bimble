@@ -24,6 +24,21 @@ export const toggleIsMetronome = () => {
     localStorage.setItem("bs.isMetronome", JSON.stringify(get(isMetronome)));
 };
 
+export const sequencerTs = derived([t, c, data], ([$t, $c, $data]) => {
+    const result: { [sequencerIndex: number]: number } = {};
+    Object.entries($data).forEach(([sequencerIndex, sequencerData]) => {
+        const bytebeat = sequencerData.bytebeat || 't';
+        try {
+            const func = eval(`(function(t, c) { return ${bytebeat}; })`);
+            const value = func($t, $c);
+            result[+sequencerIndex] = Number.isFinite(value) ? value : 0;
+        } catch {
+            result[+sequencerIndex] = 0;
+        }
+    });
+    return result;
+});
+
 const transport = getTransport()
 const draw = getDraw();
 
