@@ -1,7 +1,7 @@
 <script lang="ts">
   import Button from "./Button.svelte";
   import SVG from "./SVG.svelte";
-  import { midiSettingsOpen } from '$lib/stores/midi';
+  import { openMidiSettings } from '$lib/stores/midi';
 </script>
 
 <aside class="sidebar">
@@ -15,7 +15,7 @@
     <Button
         label="MIDI"
         padding={'0'}
-        onClick={() => midiSettingsOpen.set(true)}
+        onClick={() => openMidiSettings('all')}
     >
         <SVG type="midi" width="2rem" />
     </Button>

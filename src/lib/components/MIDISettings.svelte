@@ -1,6 +1,7 @@
 <script lang="ts">
     import { 
-        midiSettingsOpen, inputs, outputs, 
+        midiSettingsOpen, midiSettingsActive, setActiveMidiSettings,
+        inputs, outputs, 
         connectInput, connectOutput, 
         setInputChannel, setOutputChannel,
         connections 
@@ -9,8 +10,6 @@
     import { sequencers } from '$lib/stores';
     import Dialog from '$lib/components/Dialog.svelte';
     import Select from './Select.svelte';
-
-    export let sequencer: string | number = 'all'
 </script>
 
 <Dialog 
@@ -20,28 +19,28 @@
     <h3>Sequencer</h3>
     <Select 
         id="midi-settings-for"
-        value={sequencer}
+        value={$midiSettingsActive}
         options={ [
             {label: "All", value: "all"},
             ...Array.from({length: sequencers }, (_, i) => ({ label: `${i + 1}`, value: `${i}` }))
         ] }
-        onChange={(value) => sequencer = value ? value : 'all'}
+        onChange={setActiveMidiSettings}
     />
     <h3>MIDI In</h3>
     <section>
         <Select 
             id="midi-in-device"
             label="Device"
-            value={$connections[sequencer]?.input || ''}
+            value={$connections[$midiSettingsActive]?.input || ''}
             options={ $inputs.map(input => ({ label: input, value: input })) }
-            onChange={(value) => connectInput(sequencer, `${value}`)}
+            onChange={(value) => connectInput($midiSettingsActive, `${value}`)}
             />
         <Select 
             id="midi-in-channel"
             label="Channel"
-            value={$connections[sequencer]?.inputChannel === null ? 'all' : $connections[sequencer]?.inputChannel}
+            value={$connections[$midiSettingsActive]?.inputChannel === null ? 'all' : $connections[$midiSettingsActive]?.inputChannel}
             options={[{ label: 'All', value: 'all' }, ...Array.from({ length: 16 }, (_, i) => ({ label: `${i + 1}`, value: i }))]}
-            onChange={(value) => setInputChannel(sequencer, value === 'all' ? null : value ? +value : null )}
+            onChange={(value) => setInputChannel($midiSettingsActive, value === 'all' ? null : value ? +value : null )}
         />
     </section>
 
@@ -51,15 +50,15 @@
             id="midi-out-device"
             label="Device"
             options={ $outputs.map(output => ({ label: output, value: output })) }
-            value={$connections[sequencer]?.output || ''}
-            onChange={(value) => connectOutput(sequencer, `${value}`)}
+            value={$connections[$midiSettingsActive]?.output || ''}
+            onChange={(value) => connectOutput($midiSettingsActive, `${value}`)}
             />
         <Select 
             id="midi-out-channel"
             label="Channel"
-            value={$connections[sequencer]?.outputChannel === null ? 'all' : $connections[sequencer]?.outputChannel}
+            value={$connections[$midiSettingsActive]?.outputChannel === null ? 'all' : $connections[$midiSettingsActive]?.outputChannel}
             options={[{ label: 'All', value: 'all' }, ...Array.from({ length: 16 }, (_, i) => ({ label: `${i + 1}`, value: i }))]}
-            onChange={(value) => setOutputChannel(sequencer, value === 'all' ? null : value ? +value : null )}
+            onChange={(value) => setOutputChannel($midiSettingsActive, value === 'all' ? null : value ? +value : null )}
             />
     </section>
 </Dialog>

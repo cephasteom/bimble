@@ -21,6 +21,15 @@ export const connections = writable<{[sequencer: number | string]: {
 );
 
 export const midiSettingsOpen = writable(true);
+export const midiSettingsActive = writable<string | number>('all');
+export const setActiveMidiSettings = (sequencer: string | number | null) => {
+    midiSettingsActive.set(sequencer ? sequencer : 'all');
+    localStorage.setItem("bs.midiSettingsActive", `${sequencer}`);
+}
+export const openMidiSettings = (sequencer: string | number | null = null) => {
+    setActiveMidiSettings(sequencer);
+    midiSettingsOpen.set(true);
+}
 
 const populate = () => {
     inputs.set(WebMidi.inputs.map(input => input.name));

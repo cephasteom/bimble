@@ -1,5 +1,5 @@
 import { WebMidi } from "webmidi";
-import { connections } from "./midi";
+import { connections, midiSettingsActive } from "./midi";
 import { data } from "./sequencers";
 import { isMetronome } from "./transport";
 
@@ -16,6 +16,8 @@ export const loadAllStoreData = () => {
             ...JSON.parse(midiConnections)
         }));
     });
+
+    midiSettingsActive.set(localStorage.getItem("bs.midiSettingsActive") || 'all');
 
     // populate sequencer data
     const sequencerData = localStorage.getItem("bs.sequencerData") || '{}'
