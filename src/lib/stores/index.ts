@@ -7,4 +7,3 @@ export const timeSignature = writable<number>(4); // denominator of time signatu
 export const divisions = derived(timeSignature, $timeSignature => $timeSignature * 4);
 
 export const showAbout = writable(false);
-

@@ -52,7 +52,6 @@ const addListeners = () => {
 
         // note on adds note to activeNotes
         input.addListener("noteon", (e) => {
-            console.log('noteon')
             if(!get(isRecording)) return;
             activeNotes = [
                 ...activeNotes,

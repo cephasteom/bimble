@@ -1,6 +1,8 @@
 TODO:
 * bytebeat string - in the data storage as a string, then evalled as a function
 * local storage of time sig, bpm, and bytebeat string
+* bug: when loops round, sustained notes are cut short
+* amp and duration interface
 * make some music / sound design
 
 
