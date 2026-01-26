@@ -31,7 +31,7 @@
 
 <div>
     {#if prefix}
-        <span class="prefix">{prefix}</span>
+        <button on:click={() => inputElement.focus()} class="prefix">{prefix}</button>
     {/if}
     <div 
         class="input"
@@ -50,7 +50,7 @@
         ></span>
     </div>
     {#if suffix}
-        <span class="suffix">{suffix}</span>
+        <button on:click={() => inputElement.focus()} class="suffix">{suffix}</button>
     {/if}
 </div>
 
@@ -96,5 +96,12 @@
         color: white;
         font-size: 1.5rem;
         text-transform: none;
+        background: transparent;
+        border: none;
+        cursor: text;
+
+        &:focus {
+            outline: none;
+        }
     }
 </style>
