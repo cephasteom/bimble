@@ -15,12 +15,7 @@
         inputElement.style.width = `${width}px`;
     }
 
-    onMount(() => {
-        // wait for layout to settle
-        setTimeout(() => {
-            setSize();
-        }, 200);
-    });
+    onMount(setSize);
 </script>
 
 <div 
