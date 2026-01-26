@@ -1,9 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 
-    export let onInput: (value: string) => void;
+    export let onInput: (value: string) => void = () => {};
     export let value: number | string;
-    export let units: string = '';
+    export let prefix: string = '';
+    export let suffix: string = '';
     export let hasError: boolean = false;
     
     let inputElement: HTMLInputElement;
@@ -13,8 +14,10 @@
     
     function setSize() {
         if(!mirrorSpan || !inputElement) return;
+        console.log('setSize');
         mirrorSpan.textContent = `${value}`;
-        const width = mirrorSpan.offsetWidth;
+        console.log('mirrorSpan width:', mirrorSpan.getBoundingClientRect());
+        const width = mirrorSpan.getBoundingClientRect().width;
         inputElement.style.width = `${width}px`;
     }
 
@@ -26,25 +29,30 @@
     onMount(() => setTimeout(setSize, 10));
 </script>
 
-<div 
-    class="input"
-    bind:this={container}
-    class:input--error={hasError}
->
-    <input 
-        bind:this={inputElement} 
-        on:input={handleOnInput}
-        bind:value 
-        class="input__input"
-    />
-    <span 
-        class="input__mirror" 
-        bind:this={mirrorSpan}
-    ></span>
+<div>
+    {#if prefix}
+        <span class="prefix">{prefix}</span>
+    {/if}
+    <div 
+        class="input"
+        bind:this={container}
+        class:input--error={hasError}
+    >
+        <input 
+            bind:this={inputElement} 
+            on:input={handleOnInput}
+            bind:value 
+            class="input__input"
+        />
+        <span 
+            class="input__mirror" 
+            bind:this={mirrorSpan}
+        ></span>
+    </div>
+    {#if suffix}
+        <span class="suffix">{suffix}</span>
+    {/if}
 </div>
-{#if units}
-    <span class="units">{units}</span>
-{/if}
 
 <style lang="scss">
     .input {
@@ -52,16 +60,8 @@
         box-sizing: border-box;
         border-radius: 4px;
         position: relative;
-
         &--error {
-            &::before {
-                content: '!';
-                position: absolute;
-                font-size: 1.5rem;
-                left: -10px;
-                right: -4px;
-                color: var(--theme-5);
-            }
+            outline: 2px dotted var(--theme-5);
         }
 
         &__input, &__mirror {
@@ -86,13 +86,15 @@
             visibility: hidden;
             white-space: pre;
             padding: 0 0.25rem;
+            width: fit-content;
         }
 
     }
     
 
-    .units {
+    .suffix, .prefix {
         color: white;
         font-size: 1.5rem;
+        text-transform: none;
     }
 </style>

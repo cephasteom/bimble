@@ -22,3 +22,24 @@ export function beepAt(time: number, amp: number = 1) {
     osc.start(time);
     osc.stop(time + 0.01);
 }
+
+export function isValidBytebeat(expr: string): boolean {
+    if(expr.trim() === '') return false;
+    // remove strings and numbers to avoid false positives
+    const cleaned = expr
+        .replace(/(["'`])(?:\\.|(?!\1).)*\1/g, '') // strings
+        .replace(/\b\d+(\.\d+)?\b/g, '');          // numbers
+
+    const identifiers = cleaned.match(/\b[a-zA-Z_]\w*\b/g) || [];
+
+    const allowed = new Set(['t', 'c']);
+
+    if(!identifiers.every(id => allowed.has(id))) return false;
+
+    try {
+        eval(`(function(t, c) { return ${expr}; })`);
+        return true;
+    } catch {
+        return false;
+    }
+}

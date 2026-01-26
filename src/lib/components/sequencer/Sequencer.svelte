@@ -136,6 +136,7 @@
                 value={bytebeat}
                 onInput={(value) => setBytebeat(id, value)}
                 hasError={$data[id]?.hasError}
+                prefix="(t, c) => "
             />
             <Button
                 onClick={toggle}
@@ -222,6 +223,10 @@
                 display: flex;
                 align-items: center;
                 gap: 2rem;
+
+                &:last-child {
+                    gap: 1rem;
+                }
             }
         }
 

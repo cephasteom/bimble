@@ -1,5 +1,6 @@
 import { get, writable } from "svelte/store";
 import { sequencers, bars, divisions } from ".";
+import { isValidBytebeat } from "$lib/sound/utils";
 
 export const notes = 127 - 36;
 export const activeSequencer = writable<number | null>(0);
@@ -57,20 +58,14 @@ export const toggleRecord = (sequencer: number) => {
 };
 
 export const setBytebeat = (sequencer: number, bytebeat: string) => {
-    let hasError = false;
-    try {
-        new Function("t", `return ${bytebeat}`);
-    } catch (e) {
-        bytebeat = get(data)[sequencer].bytebeat;
-        hasError = true;
-    }
+    const isValid = isValidBytebeat(bytebeat);
 
     data.update((sequencers) => ({
         ...sequencers,
         [sequencer]: {
             ...sequencers[sequencer],
-            bytebeat,
-            hasError
+            bytebeat: isValid ? bytebeat : sequencers[sequencer].bytebeat,
+            hasError: !isValid
         }
     }));
     localStorage.setItem("bs.sequencerData", JSON.stringify(get(data)));
