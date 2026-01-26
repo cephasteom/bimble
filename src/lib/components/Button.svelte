@@ -6,7 +6,11 @@
     export let padding = '0.5rem';
 </script>
 
-<button class="btn" on:click={onClick} style="width: {width}; padding: {padding}; font-size: {fontSize};">
+<button 
+    class="btn" 
+    on:click={onClick} 
+    style="width: {width}; padding: {padding}; font-size: {fontSize};"
+>
     <slot></slot>
     {#if label}
         <span>{label}</span>

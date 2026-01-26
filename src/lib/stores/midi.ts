@@ -6,16 +6,26 @@ import { isRecording, position } from "./transport";
 
 export const inputs = writable<any[]>([]);
 export const outputs = writable<any[]>([]);
-export const connections = writable<{[sequencer: number]: {input: string | null, output: string | null}}>(
-    Object.keys(get(data)).reduce((acc, key) => ({ ...acc, [key]: { input: null, output: null } }), {})
+export const connections = writable<{[sequencer: number | string]: {
+    input: string | null, 
+    inputChannel: number | null,
+    output: string | null,
+    outputChannel: number | null
+}}>(
+    [
+        'all',
+        ...Object.keys(get(data))].reduce((acc, key) => ({ 
+            ...acc, 
+            [key]: { input: null, inputChannel: null, output: null, outputChannel: null } 
+        }), {})
 );
-export const midiSettingsOpen = writable(false);
+
+export const midiSettingsOpen = writable(true);
 
 const populate = () => {
     inputs.set(WebMidi.inputs.map(input => input.name));
     outputs.set(WebMidi.outputs.map(output => output.name));
 };
-
 
 const addListeners = () => {
     // remove existing listeners
@@ -78,7 +88,7 @@ WebMidi.enable().then(() => {
     WebMidi.addListener("disconnected", configure);
 });
 
-const connect = (type: "input" | "output", sequencer: number, device: string | null) => {
+const connect = (type: "input" | "output", sequencer: number | string, device: string | null) => {
     connections.update((conns) => ({
         ...conns,
         [sequencer]: {
@@ -90,11 +100,32 @@ const connect = (type: "input" | "output", sequencer: number, device: string | n
     localStorage.setItem("bs.midiConnections", JSON.stringify(get(connections)));
 };
 
-export const connectInput = (sequencer: number, inputName: string | null) => {
+const setChannel = (type: "input" | "output", sequencer: number | string, channel: number | null) => {
+    connections.update((conns) => ({
+        ...conns,
+        [sequencer]: {
+            ...conns[sequencer],
+            [`${type}Channel`]: channel
+        }
+    }));
+    // persist to localstorage
+    localStorage.setItem("bs.midiConnections", JSON.stringify(get(connections)));
+}
+
+export const connectInput = (sequencer: number | string, inputName: string | null) => {
     connect("input", sequencer, inputName);
     addListeners();
 };
 
-export const connectOutput = (sequencer: number, outputName: string | null) => {
+export const connectOutput = (sequencer: number | string, outputName: string | null) => {
     connect("output", sequencer, outputName);
+};
+
+export const setInputChannel = (sequencer: number | string, channel: number | null) => {
+    console.log('setInputChannel', sequencer, channel);
+    setChannel("input", sequencer, channel);
+};
+
+export const setOutputChannel = (sequencer: number | string, channel: number | null) => {
+    setChannel("output", sequencer, channel);
 };

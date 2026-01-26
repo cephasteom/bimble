@@ -12,7 +12,6 @@
     import Cell from "./Cell.svelte";
     import SVG from "$lib/components/SVG.svelte";
     import Button from "$lib/components/Button.svelte";
-    import Input from "$lib/components/Input.svelte";
 
     export let id: number;
     let currentNote = -1;

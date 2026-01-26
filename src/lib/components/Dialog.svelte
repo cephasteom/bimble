@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Button from "./Button.svelte";
-  import SVG from "./SVG.svelte";
+    import Button from "./Button.svelte";
+    import SVG from "./SVG.svelte";
 
     export let open = false;
     export let title: string = "Dialog";
