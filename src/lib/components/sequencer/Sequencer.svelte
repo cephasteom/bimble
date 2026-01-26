@@ -6,17 +6,19 @@
     } from "$lib/stores/sequencers";
     import { openMidiSettings } from "$lib/stores/midi";
     import { t, c } from '$lib/stores/transport';
-    import { data, toggleNote, moveNote, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencers";
+    import { data, addNote, removeNote, moveNote, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencers";
     import { bars, divisions } from "$lib/stores/";
     import Cell from "./Cell.svelte";
     import SVG from "$lib/components/SVG.svelte";
     import Button from "$lib/components/Button.svelte";
+    import { onMount } from "svelte";
 
     export let id: number;
     let currentNote = -1;
     let mouseIsDown = false;
     let startDivision = -1;
     let startNote = -1;
+    let currentCell = {division: -1, note: -1};
 
     const toggle = () => activeSequencer.update(activeId => activeId === id ? null : id);
 
@@ -28,7 +30,7 @@
 
     const handleMouseUp = (divisionIndex: number, noteIndex: number) => {
         startDivision === divisionIndex && startNote === noteIndex
-            ? toggleNote(id, divisionToPosition(divisionIndex), noteIndex)
+            ? addNote(id, divisionToPosition(divisionIndex), noteIndex)
             : moveNote(id, divisionToPosition(startDivision), startNote, divisionToPosition(divisionIndex), noteIndex);
         
         startDivision = -1;
@@ -43,10 +45,31 @@
         currentNote = -1;
     };
 
+    const handleMouseFocus = (divisionIndex: number, noteIndex: number) => {
+        currentCell = { division: divisionIndex, note: noteIndex };
+    };
+
     $: collapsed = $activeSequencer !== id;
     $: colour = `var(--theme-${(id % 5) + 1})`;
     $: record = $data[id]?.record || false;
     $: muted = $data[id]?.muted || false;
+    
+    onMount(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (currentCell.division === -1 || currentCell.note === -1) return;
+
+            // if backspace or delete is pressed, remove the note at the current cell
+            if (event.key === "Backspace" || event.key === "Delete") {
+                removeNote(id, divisionToPosition(currentCell.division), currentCell.note);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    });
 </script>
 
 <section 
@@ -148,6 +171,7 @@
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
                         handleMouseUp={handleMouseUp}
+                        handleMouseFocus={handleMouseFocus}
                         {mouseIsDown}
                         colour={colour}
                     />

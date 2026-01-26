@@ -8,6 +8,7 @@
     export let handleMouseOver: () => void;
     export let handleMouseDown: (division: number, note: number) => void;
     export let handleMouseUp: (division: number, note: number) => void;
+    export let handleMouseFocus: (division: number, note: number) => void;
     export let mouseIsDown: boolean;
     export let colour: string = 'var(--theme-1)';
 </script>
@@ -21,9 +22,9 @@
     class:mouseIsDown={mouseIsDown}
     aria-label="Toggle note {note} at division {division + 1}"
     on:mouseover={handleMouseOver}
-    on:focus={handleMouseOver}
     on:mousedown={() => handleMouseDown(division, note)}
     on:mouseup={() => handleMouseUp(division, note)}
+    on:focus={() => handleMouseFocus(division, note)}
 >
 </button>
 
@@ -51,6 +52,11 @@
 
     &.mouseIsDown:hover {
         background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+        z-index: 10;
+        outline: 2px solid white;
     }
 }
 </style>

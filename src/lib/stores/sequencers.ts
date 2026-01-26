@@ -55,8 +55,6 @@ export const toggleRecord = (sequencer: number) => {
     localStorage.setItem("bs.sequencerData", JSON.stringify(get(data)));
 };
 
-
-
 /**
  * Add a note at position
  */
@@ -82,34 +80,21 @@ export const addNote = (
 };
 
 /**
- * Add a note if it doesn't exist at the given position/note, or remove it if it does
- * @param sequencer 
- * @param position 
- * @param note 
- * @param amp 
- * @param duration 
+ * Remove a note at position
  */
-export const toggleNote = (
+export const removeNote = (
     sequencer: number,
     position: number,
-    note: number,
-    amp = 0.75,
-    duration = 1/get(divisions)
+    note: number
 ) => {
-    data.update((sequencers) => {
-        const notes = sequencers[sequencer].notes;
-        const exists = notes.some(n => floorPosition(n.position) === position && n.note === note);
-
-        return {
-            ...sequencers,
-            [sequencer]: {
-                ...sequencers[sequencer],
-                notes: exists
-                ? notes.filter(n => !(floorPosition(n.position) === position && n.note === note))
-                : notes.concat({ position: position, note, amp, duration })
-            }
-        };
-    });
+    data.update((sequencers) => ({
+        ...sequencers,
+        [sequencer]: {
+            ...sequencers[sequencer],
+            notes: sequencers[sequencer].notes
+                .filter(n => !(floorPosition(n.position) === position && n.note === note))
+        }
+    }));
     localStorage.setItem("bs.sequencerData", JSON.stringify(get(data)));
 };
 

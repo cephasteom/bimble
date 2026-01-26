@@ -47,7 +47,6 @@ const addListeners = () => {
     
     // add listeners
     WebMidi.inputs.forEach(input => {
-        console.log('Adding listeners to', input.name);
         let activeNotes: Note[] = [];
 
         // note on adds note to activeNotes
