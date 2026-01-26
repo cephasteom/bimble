@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { aboutOpen } from '$lib/stores';
+    import { showAbout } from '$lib/stores';
     import Button from './Button.svelte';
 </script>
 
 <header class="header">
     <h1>ByteStep</h1>
     <nav>
-        <Button onClick={() => aboutOpen.set(true)}>
+        <Button onClick={() => showAbout.set(true)}>
             <span>About</span>
         </Button>
     </nav>

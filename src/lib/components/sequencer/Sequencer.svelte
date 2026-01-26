@@ -65,6 +65,7 @@
             <Button
                 onClick={() => toggleRecord(id)}
                 padding={'0'}
+                ariaLabel={record ? "Stop recording" : "Start recording"}
             >
                 <SVG 
                     type={`circle${record ? "--solid" : ""}`} 
@@ -74,33 +75,34 @@
             </Button>
 
             <Button
-                onClick={() => toggleMute(id)}
-                padding={'0'}
-            >
-                <SVG 
-                    type="mute"
-                    fill={muted ? colour : 'white'}
-                    width={'1.25rem'}
-                />
-            </Button>
-
-            <Button
                 onClick={() => clearSequencer(id)}
                 padding={'0'}
-
+                ariaLabel="Clear sequencer"
             >
                 <SVG 
                     type="erase" 
                     width={'1.25rem'}
                 />
             </Button>
-
+            
             <Button
                 onClick={() => openMidiSettings(id)}
                 padding={'0'}
+                ariaLabel="Open MIDI settings"
             >
                 <SVG 
                     type="midi" 
+                    width={'1.25rem'}
+                />
+            </Button>
+
+            <Button
+                onClick={() => toggleMute(id)}
+                padding={'0'}
+                ariaLabel={muted ? "Unmute sequencer" : "Mute sequencer"}
+            >
+                <SVG 
+                    type={muted ? "mute" : "speaker"}
                     width={'1.25rem'}
                 />
             </Button>

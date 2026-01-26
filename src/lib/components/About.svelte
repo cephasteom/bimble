@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { aboutOpen } from '$lib/stores';
+    import { showAbout } from '$lib/stores';
     import Dialog from '$lib/components/Dialog.svelte';
 </script>
 
 <Dialog 
-    bind:open={$aboutOpen}
+    bind:open={$showAbout}
     title="About"
 >
     <p>ByteStep combines the convenience of a DAW with the flexibility of live coding.</p>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { 
-        midiSettingsOpen, midiSettingsActive,
+        showMidiSettings, midiSettingsActive,
         inputs, outputs, 
         connectInput, connectOutput, 
         setInputChannel, setOutputChannel,
@@ -13,7 +13,7 @@
 </script>
 
 <Dialog 
-    bind:open={$midiSettingsOpen}
+    bind:open={$showMidiSettings}
     title="MIDI Settings"
 >
     <h3>Sequencer</h3>

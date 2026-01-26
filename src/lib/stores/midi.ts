@@ -26,11 +26,11 @@ export const connections = writable<{[sequencer: number | string]: {
 /**
  * MIDI Settings Modal
  */
-export const midiSettingsOpen = writable(false);
+export const showMidiSettings = writable(false);
 export const midiSettingsActive = writable<string | number>('all');
 export const openMidiSettings = (sequencer: string | number | null = null) => {
     midiSettingsActive.set(sequencer !== null ? sequencer : 'all');
-    midiSettingsOpen.set(true);
+    showMidiSettings.set(true);
 }
 
 /**

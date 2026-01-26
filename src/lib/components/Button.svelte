@@ -2,6 +2,7 @@
     export let onClick = () => {};
     export let width = 'auto';
     export let label = '';
+    export let ariaLabel = '';
     export let fontSize = '1rem';
     export let padding = '0.5rem';
 </script>
@@ -10,6 +11,7 @@
     class="btn" 
     on:click={onClick} 
     style="width: {width}; padding: {padding}; font-size: {fontSize};"
+    aria-label={ariaLabel}
 >
     <slot></slot>
     {#if label}
