@@ -4,6 +4,9 @@ import { data, addNote, type Note } from "./sequencers";
 import { divisions } from ".";
 import { isRecording, position } from "./transport";
 
+/**
+ * MIDI inputs and outputs, and connections to sequencers
+ */
 export const inputs = writable<any[]>([]);
 export const outputs = writable<any[]>([]);
 export const connections = writable<{[sequencer: number | string]: {
@@ -20,17 +23,19 @@ export const connections = writable<{[sequencer: number | string]: {
         }), {})
 );
 
-export const midiSettingsOpen = writable(true);
+/**
+ * MIDI Settings Modal
+ */
+export const midiSettingsOpen = writable(false);
 export const midiSettingsActive = writable<string | number>('all');
-export const setActiveMidiSettings = (sequencer: string | number | null) => {
-    midiSettingsActive.set(sequencer ? sequencer : 'all');
-    localStorage.setItem("bs.midiSettingsActive", `${sequencer}`);
-}
 export const openMidiSettings = (sequencer: string | number | null = null) => {
-    setActiveMidiSettings(sequencer);
+    midiSettingsActive.set(sequencer !== null ? sequencer : 'all');
     midiSettingsOpen.set(true);
 }
 
+/**
+ * MIDI Setup
+ */
 const populate = () => {
     inputs.set(WebMidi.inputs.map(input => input.name));
     outputs.set(WebMidi.outputs.map(output => output.name));
@@ -131,7 +136,6 @@ export const connectOutput = (sequencer: number | string, outputName: string | n
 };
 
 export const setInputChannel = (sequencer: number | string, channel: number | null) => {
-    console.log('setInputChannel', sequencer, channel);
     setChannel("input", sequencer, channel);
 };
 

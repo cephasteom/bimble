@@ -1,6 +1,6 @@
 <script lang="ts">
     import { 
-        midiSettingsOpen, midiSettingsActive, setActiveMidiSettings,
+        midiSettingsOpen, midiSettingsActive,
         inputs, outputs, 
         connectInput, connectOutput, 
         setInputChannel, setOutputChannel,
@@ -22,9 +22,9 @@
         value={$midiSettingsActive}
         options={ [
             {label: "All", value: "all"},
-            ...Array.from({length: sequencers }, (_, i) => ({ label: `${i + 1}`, value: `${i}` }))
+            ...Array.from({length: sequencers }, (_, i) => ({ label: `${i + 1}`, value: i }))
         ] }
-        onChange={setActiveMidiSettings}
+        onChange={(value) => midiSettingsActive.set(value !== null ? value : 'all')}
     />
     <h3>MIDI In</h3>
     <section>

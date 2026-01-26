@@ -5,7 +5,7 @@
         toggleMute,
         timeFunctions
     } from "$lib/stores/sequencers";
-    import { inputs, outputs, connectInput, connectOutput, connections } from "$lib/stores/midi";
+    import { openMidiSettings } from "$lib/stores/midi";
     import { t, c } from '$lib/stores/transport';
     import { data, toggleNote, moveNote, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencers";
     import { bars, divisions } from "$lib/stores/";
@@ -94,6 +94,16 @@
                     width={'1.25rem'}
                 />
             </Button>
+
+            <Button
+                onClick={() => openMidiSettings(id)}
+                padding={'0'}
+            >
+                <SVG 
+                    type="midi" 
+                    width={'1.25rem'}
+                />
+            </Button>
         </div>
         <div>
             <Button
@@ -108,37 +118,6 @@
             </Button>
         </div>
     </header>
-
-    <div class="config">
-        <div class="midi">
-            <div>
-                <label for="midi-input-{id}">MIDI In</label>
-                <select 
-                    id="midi-input-{id}" 
-                    on:change={(e) => connectInput(id, (e.target as HTMLInputElement).value)}
-                    value={$connections[id]?.input}
-                >
-                    <option value={null}>None</option>
-                    {#each $inputs as input}
-                        <option value={input}>{input}</option>
-                    {/each}
-                </select>
-            </div>
-            <div>
-                <label for="midi-output-{id}">MIDI Out</label>
-                <select 
-                    id="midi-output-{id}" 
-                    on:change={(e) => connectOutput(id, (e.target as HTMLInputElement).value)}
-                    value={$connections[id]?.output}
-                >
-                    <option value={null}>None</option>
-                    {#each $outputs as output}
-                        <option value={output}>{output}</option>
-                    {/each}
-                </select>
-            </div>
-        </div>
-    </div>
 
     <div class="sequencer__content">
         <div class="sequencer__piano">
@@ -213,29 +192,7 @@
                 gap: 2rem;
             }
         }
-    
-        .config {
-            display: flex;
-            justify-content: space-between;
-        }
-        .midi {
-            display: flex;
-            gap: 1rem;
 
-            label {
-                margin-right: 0.5rem;
-                font-size: 0.875rem;
-                color: white;
-            }
-
-            select {
-                background: rgba(255, 255, 255, 0.1);
-                border: 0;
-                color: white;
-                padding: 0.25rem;
-                font-size: 0.875rem;
-            }   
-        }
         &__content {
             box-sizing: border-box;
             display: grid;
