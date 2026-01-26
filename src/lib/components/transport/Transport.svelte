@@ -37,16 +37,14 @@
     <div class="transport__item">
         <Input 
             bind:value={$bpm} 
-            units="BPM" 
-            type="number"
+            units="BPM"
         />
     </div>
 
     <div class="transport__item">
         <Input 
             bind:value={$timeSignature} 
-            units=" / 4" 
-            type="number"
+            units="/ 4" 
         />
     </div>
 

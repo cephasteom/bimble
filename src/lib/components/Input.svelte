@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
     export let value: number | string;
     export let units: string = '';
-    export let type: 'text' | 'number' = 'text';
     
     let inputElement: HTMLInputElement;
     let mirrorSpan: HTMLSpanElement;

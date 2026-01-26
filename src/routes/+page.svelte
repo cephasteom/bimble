@@ -3,7 +3,6 @@
     import '$lib/styles.css';
     import { onMount } from 'svelte';
     import { loadAllStoreData } from '$lib/stores/localstorage';
-    import { initCodeListeners } from '$lib/stores/code';
     
     import Transport from '$lib/components/transport/Transport.svelte';
     import Sequencers from '$lib/components/sequencer/Sequencers.svelte';
@@ -13,8 +12,7 @@
     import MIDISettings from '$lib/components/MIDISettings.svelte';
 
     onMount(() => {
-        loadAllStoreData()
-        initCodeListeners();
+        loadAllStoreData();
     });
 </script>
 

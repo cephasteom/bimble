@@ -3,8 +3,6 @@ import { sequencers, bars, divisions } from ".";
 
 export const notes = 127 - 36;
 export const activeSequencer = writable<number | null>(0);
-// TODO: move the below into the data
-export const timeFunctions = writable({} as Record<number, (t: number, c: number) => number>);
 
 export type Note = {
     position: number; // in cycles
@@ -170,8 +168,7 @@ export const clearSequencer = (sequencer: number) => {
  */
 export const query: (division: number) => { [sequencerIndex: number]: Note[] } = (division: number) => {
     return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => {
-        const func = get(timeFunctions)[i] || ((t: number) => t); // TODO: get from data
-        const position = divisionToPosition(func(division, Math.floor(division / (get(divisions) * bars))));
+        const position = divisionToPosition(division);
         return {
         ...acc,
         [i]: s.notes.filter((n) => 
