@@ -29,11 +29,11 @@ export const loadAllStoreData = () => {
     isMetronome.set(retrieve<boolean>('bs.isMetronome', false));
     bpm.set(retrieve<number>('bs.bpm', 120));
     timeSignature.set(retrieve<number>('bs.timeSignature', 4));
-
 }
 
 /**
  * Pass to a store to have it persist its data to localStorage on changes
+ * @param key The localStorage key to use
  * @example store.subscribe(persist('bs.storeKey'))
  * @returns A function that can be passed to a store's subscribe method
  */
@@ -49,6 +49,12 @@ export function persist(key: string) {
     };
 }
 
+/**
+ * Retrieve and parse a value from localStorage
+ * @param key The localStorage key to retrieve
+ * @param defaultValue The default value to return if no value is found
+ * @returns The parsed value from localStorage, or the default value
+ */
 function retrieve<T>(key: string, defaultValue: T): T {
     const storedValue = localStorage.getItem(key);
     if (storedValue === null) return defaultValue;
