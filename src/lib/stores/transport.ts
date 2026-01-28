@@ -1,7 +1,7 @@
 import { getTransport, immediate, Loop, getDraw } from 'tone'
 import { writable, get, derived } from 'svelte/store';
 import { timeSignature, bars, divisions } from '.';
-import { divisionToPosition, query, floorPosition, data } from './sequencers';
+import { divisionToPosition, query, floorPosition, data, type SequencerData } from './sequencers';
 import { connections } from './midi';
 import { WebMidi } from 'webmidi';
 import { beepAt, evalBytebeat, mod } from '$lib/sound/utils';
@@ -44,10 +44,13 @@ isMetronome.subscribe(persist('bs.isMetronome'));
 export const toggleIsMetronome = () => isMetronome.update(m => !m);
 
 export const sequencerTs = derived([t, c, divisions, data], ([$t, $c, $divisions, $data]) => {
-    return Object.entries($data).reduce((result, [sequencerIndex, sequencerData]) => ({
+    return Object.entries($data).reduce<Record<number, number>>((
+        result: Record<number, number>, 
+        [sequencerIndex, sequencerData]
+    ) => ({
         ...result,
         [+sequencerIndex]: mod(evalBytebeat(sequencerData.bytebeat || 't', $t, $c), $divisions * bars)
-    }), {});
+    }), {} as Record<number, number>);
 });
 
 const transport = getTransport()

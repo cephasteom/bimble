@@ -6,7 +6,7 @@
         setBytebeat,
     } from "$lib/stores/sequencers";
     import { openMidiSettings } from "$lib/stores/midi";
-    import { sequencerTs } from '$lib/stores/transport';
+    import { isPlaying, sequencerTs } from '$lib/stores/transport';
     import { data, addNote, removeNote, moveNote, notes, happensWithin, divisionToPosition } from "$lib/stores/sequencers";
     import { bars, divisions } from "$lib/stores/";
     import Cell from "./Cell.svelte";
@@ -176,7 +176,7 @@
                         row={(notes - noteIndex) + 1}
                         highlighted={!(Math.floor(divisionIndex / 4) % 2)}
                         on={$data[id].notes.some(n => happensWithin(divisionIndex, n.position) && n.note === noteIndex)}   
-                        active={$sequencerTs[id] % ($divisions * bars) === divisionIndex}
+                        active={$isPlaying && $sequencerTs[id] % ($divisions * bars) === divisionIndex}
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
                         handleMouseUp={handleMouseUp}

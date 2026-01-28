@@ -1,9 +1,10 @@
 TODO:
-* local storage of time sig, bpm
-* bug: when loops round, sustained notes are cut short
+* bug: when recording loops round, sustained notes are cut short
+* bug: handle -1
 * amp and duration interface
 * make some music / sound design
 * bytebeat eval on enter
+* input interface
 * can we move the playnote logic into the midi.ts file, it's own loop which should be sync'd?
 
 
