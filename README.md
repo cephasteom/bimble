@@ -1,9 +1,7 @@
 TODO:
-* input interface
 * bug: when recording loops round, sustained notes are cut short
-* amp and duration interface
+* amp, duration, cc interface
 * make some music / sound design
-* bytebeat eval on enter
 * can we move the playnote logic into the midi.ts file, it's own loop which should be sync'd?
 
 

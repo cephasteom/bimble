@@ -132,6 +132,16 @@ isPlaying.subscribe(playing => playing
 
 export const mapTransportKeys = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
+        const el = e.target as HTMLElement;
+        // Ignore typing contexts
+        if (
+            el.tagName === 'INPUT' ||
+            el.tagName === 'TEXTAREA' ||
+            el.isContentEditable
+        ) {
+            return;
+        }
+        
         if (e.code === 'Space') {
             toggleIsPlaying();
             e.preventDefault();

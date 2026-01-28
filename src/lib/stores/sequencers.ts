@@ -35,8 +35,32 @@ export const data = writable<SequencerData>(
             }
         }), {})
 );
-
 data.subscribe(persist('bs.sequencerData'));
+
+export const globalBytebeat = writable<{ bytebeat: string; hasError: boolean }>({
+    bytebeat: "t",
+    hasError: false
+});
+globalBytebeat.subscribe(persist('bs.globalBytebeat'));
+export const setGlobalBytebeat = (bytebeat: string) => {
+    const isValid = isValidBytebeat(bytebeat);
+    globalBytebeat.set({
+        bytebeat,
+        hasError: !isValid
+    });
+
+    // if valid, replicate to all sequencers
+    if(isValid) data.update((sequencers) => {
+        const updatedSequencers: SequencerData = {};
+        for (const [index, sequencer] of Object.entries(sequencers)) {
+            updatedSequencers[Number(index)] = {
+                ...sequencer,
+                bytebeat
+            };
+        }
+        return updatedSequencers;
+    });
+}
 
 export const toggleMute = (sequencer: number) => {
     data.update((sequencers) => ({
