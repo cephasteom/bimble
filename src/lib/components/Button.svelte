@@ -5,10 +5,12 @@
     export let ariaLabel = '';
     export let fontSize = '1rem';
     export let padding = '0.5rem';
+    export let isActive = false;
 </script>
 
 <button 
     class="btn" 
+    class:active={isActive}
     on:click={onClick} 
     style="width: {width}; padding: {padding}; font-size: {fontSize};"
     aria-label={ariaLabel}
@@ -31,5 +33,21 @@
         justify-content: center;
         gap: 0.5rem;
         cursor: pointer;
+        position: relative;
+
+        &.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: var(--theme-2);
+            // make colour glow
+            box-shadow: 0 0 10px var(--theme-2);
+            border-radius: 50%;
+        }
     }
+    
 </style>

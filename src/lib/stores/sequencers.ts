@@ -6,6 +6,8 @@ import { persist } from "./localstorage";
 export const notes = 127 - 36;
 export const activeSequencer = writable<number | null>(0);
 
+export const showSequencers = writable(true);
+
 export type Note = {
     position: number; // in cycles
     note: number;

@@ -1,13 +1,16 @@
 <script lang="ts">
   import Button from "./Button.svelte";
   import SVG from "./SVG.svelte";
-  import { openMidiSettings } from '$lib/stores/midi';
+  import { openMidiSettings, showMidiSettings } from '$lib/stores/midi';
+  import { showSequencers } from "$lib/stores/sequencers";
 </script>
 
 <aside class="sidebar">
     <Button
         label="Step"
         padding={'0'}
+        onClick={() => showSequencers.update(v => !v)}
+        isActive={$showSequencers}
     >
         <SVG type="piano" width="2rem" />
     </Button>
@@ -16,6 +19,7 @@
         label="MIDI"
         padding={'0'}
         onClick={() => openMidiSettings('all')}
+        isActive={$showMidiSettings}
     >
         <SVG type="midi" width="2rem" />
     </Button>
