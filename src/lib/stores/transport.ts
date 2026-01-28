@@ -49,7 +49,7 @@ export const sequencerTs = derived([t, c, divisions, data], ([$t, $c, $divisions
         [sequencerIndex, sequencerData]
     ) => ({
         ...result,
-        [+sequencerIndex]: mod(evalBytebeat(sequencerData.bytebeat || 't', $t, $c), $divisions * bars)
+        [+sequencerIndex]: $t === -1 ? -1 : mod(evalBytebeat(sequencerData.bytebeat || 't', $t, $c), $divisions * bars)
     }), {} as Record<number, number>);
 });
 
