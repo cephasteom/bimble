@@ -21,6 +21,7 @@
     let startDivision = -1;
     let startNote = -1;
     let currentCell = {division: -1, note: -1};
+    let scrollableDiv: HTMLDivElement;
 
     const toggle = () => activeSequencer.update(activeId => activeId === id ? null : id);
 
@@ -69,8 +70,23 @@
 
         window.addEventListener("keydown", handleKeyDown);
 
+        let hasScrolled = false;
+        const cancelActiveSequencerSubscription = activeSequencer.subscribe(activeId => {
+            if (!scrollableDiv || hasScrolled) return;
+            if (activeId !== id) return scrollableDiv.scrollTo({ top: 0 }); // scroll to top when deactivated
+
+            // scroll to highest note when activated
+            const highestNote = $data[id].notes.reduce((max, n) => n.note > max ? n.note : max, 0 );
+            scrollableDiv.scrollTo({
+                top: ((24 + 2) * (notes - highestNote)),
+            });
+
+            hasScrolled = true;
+        });
+
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
+            cancelActiveSequencerSubscription();
         };
     });
 </script>
@@ -167,7 +183,10 @@
         {/each}
     </div>
 
-    <div class="sequencer__content">
+    <div 
+        class="sequencer__content"
+        bind:this={scrollableDiv}
+    >
         <div class="sequencer__piano">
             {#each Array(notes) as _, noteIndex}
                 <div 

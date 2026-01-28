@@ -4,7 +4,8 @@ import { evalBytebeat, isValidBytebeat, mod } from "$lib/sound/utils";
 import { persist } from "./localstorage";
 
 export const notes = 127 - 36;
-export const activeSequencer = writable<number | null>(0);
+export const activeSequencer = writable<number | null>(null);
+activeSequencer.subscribe(persist('bs.activeSequencer'));
 
 export const showSequencers = writable(true);
 

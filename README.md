@@ -1,12 +1,13 @@
 TODO:
-* bug: handle note off issue when repeating notes
-* bug: when recording loops round, sustained notes are cut short
+* on expand, scroll to median note
+
 * amp, duration, cc interface
-* opacity of note based on duration
+* bug: when recording loops round, sustained notes are cut short
+* opacity of note based on amp
 * settings modal - with interference and cellular automata
 * make some music / sound design
 * interference
-* on expand, scroll to median note
+* sync to DAW
 
 # sv
 
