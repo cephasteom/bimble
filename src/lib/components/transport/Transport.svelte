@@ -37,6 +37,7 @@
     <div class="transport__item">
         <Input 
             bind:value={$bpm} 
+            width="2.25rem"
             suffix="BPM"
         />
     </div>
@@ -44,6 +45,7 @@
     <div class="transport__item">
         <Input 
             bind:value={$timeSignature} 
+            width=".75rem"
             suffix="/ 4" 
         />
     </div>

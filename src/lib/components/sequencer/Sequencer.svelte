@@ -130,14 +130,16 @@
                     width={'1.25rem'}
                 />
             </Button>
-        </div>
-        <div>
             <Input
                 value={bytebeat}
                 onInput={(value) => setBytebeat(id, value)}
+                flashOnInput={true}
                 hasError={$data[id]?.hasError}
                 prefix="(t, c) => "
+                width="12rem"
             />
+        </div>
+        <div>
             <Button
                 onClick={toggle}
                 padding={'0'}

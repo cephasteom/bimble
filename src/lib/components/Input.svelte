@@ -1,51 +1,60 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
 
     export let onInput: (value: string) => void = () => {};
     export let value: number | string;
     export let prefix: string = '';
     export let suffix: string = '';
     export let hasError: boolean = false;
+    export let width: string = 'auto';
+    export let flashOnInput: boolean = false;
     
     let inputElement: HTMLInputElement;
-    let mirrorSpan: HTMLSpanElement;
-    
-    let container: HTMLElement;
-    
-    function setSize() {
-        if(!mirrorSpan || !inputElement) return;
-        mirrorSpan.textContent = `${value}`;
-        const width = mirrorSpan.getBoundingClientRect().width;
-        inputElement.style.width = `${width}px`;
-    }
 
-    function handleOnInput(e: Event) {
-        onInput((e.target as HTMLInputElement).value);
-        setSize();
-    }
+    const flash = () => {
+        if (!inputElement) return;
+        const originalBg = inputElement.style.backgroundColor;
+        inputElement.style.backgroundColor = 'var(--theme-1)';
+        setTimeout(() => {
+            inputElement.style.backgroundColor = originalBg;
+        }, 150);
+    };
 
-    onMount(() => setTimeout(setSize, 10));
+    onMount(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!inputElement) return;
+            if (e.key === 'Enter' ) {
+                onInput(inputElement.value);
+                flashOnInput 
+                    ? flash() // show flash effect
+                    : inputElement.blur(); // remove focus unless flashOnInput is true
+            }
+            if (e.key === 'Escape') {
+                inputElement.blur();
+            }
+        };
+
+        inputElement.addEventListener('keydown', handleKeyDown);
+        return () => inputElement.removeEventListener('keydown', handleKeyDown);
+    });
+
 </script>
 
-<div>
+<div class="input-wrapper">
     {#if prefix}
         <button on:click={() => inputElement.focus()} class="prefix">{prefix}</button>
     {/if}
     <div 
         class="input"
-        bind:this={container}
         class:input--error={hasError}
+        style="width: {width};"
     >
         <input 
-            bind:this={inputElement} 
-            on:input={handleOnInput}
+            bind:this={inputElement}
             bind:value 
             class="input__input"
+            style="text-align: {prefix ? 'left' : suffix ? 'right' : 'center'};"
         />
-        <span 
-            class="input__mirror" 
-            bind:this={mirrorSpan}
-        ></span>
     </div>
     {#if suffix}
         <button on:click={() => inputElement.focus()} class="suffix">{suffix}</button>
@@ -53,19 +62,17 @@
 </div>
 
 <style lang="scss">
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
     .input {
-        display: inline-grid;
         box-sizing: border-box;
         border-radius: 4px;
         position: relative;
         &--error {
             outline: 2px dotted var(--theme-5);
-        }
-
-        &__input, &__mirror {
-            grid-area: 1 / 1;
-            font: inherit;
-            padding: 0 0.25rem;
         }
 
         &__input {
@@ -75,21 +82,12 @@
             text-align: center;
             background-color: var(--black-lighter);
             color: white;
-            width: 1ch;
+            width: 100%;
             overflow: visible;
             padding: 0;
+            position: relative;
         }
-
-        &__mirror {
-            visibility: hidden;
-            white-space: pre;
-            padding: 0 0.25rem;
-            width: fit-content;
-        }
-
     }
-    
-
     .suffix, .prefix {
         color: white;
         font-size: 1.5rem;
@@ -97,6 +95,7 @@
         background: transparent;
         border: none;
         cursor: text;
+        padding: 0;
 
         &:focus {
             outline: none;

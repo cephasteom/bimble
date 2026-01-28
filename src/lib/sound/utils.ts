@@ -25,10 +25,12 @@ export function beepAt(time: number, amp: number = 1) {
 
 export function isValidBytebeat(expr: string): boolean {
     if(expr.trim() === '') return false;
-    // remove strings and numbers to avoid false positives
+    // remove strings, numbers, and Math object methods to avoid false positives
     const cleaned = expr
         .replace(/(["'`])(?:\\.|(?!\1).)*\1/g, '') // strings
-        .replace(/\b\d+(\.\d+)?\b/g, '');          // numbers
+        .replace(/\b\d+(\.\d+)?\b/g, '')          // numbers
+        .replace(/\bMath\.\w+\b/g, '');          // Math methods
+
 
     const identifiers = cleaned.match(/\b[a-zA-Z_]\w*\b/g) || [];
 
