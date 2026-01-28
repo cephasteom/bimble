@@ -4,6 +4,7 @@ TODO:
 * amp, duration, cc interface
 * make some music / sound design
 * interference
+* visual feedback on sequencer position when collapsed
 
 # sv
 
