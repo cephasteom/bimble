@@ -39,7 +39,8 @@
 
         <div class="transport__item">
             <Input 
-                bind:value={$bpm} 
+                value={$bpm} 
+                onInput={(value) => bpm.set(clamp(parseInt(value) || 120, 20, 250) )}
                 width="2.25rem"
                 suffix="BPM"
             />
