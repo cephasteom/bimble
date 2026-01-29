@@ -2,10 +2,10 @@ import { writable, get } from "svelte/store";
 import { WebMidi } from "webmidi";
 import { data, addNote, type Note, query, divisionToPosition } from "./sequencers";
 import { bars, divisions } from ".";
-import { t, isRecording, position, cps } from "./transport";
+import { t, isRecording, cps } from "./transport";
 import { persist } from "./localstorage";
 import { immediate, Loop } from "tone";
-import { clamp } from "$lib/utils";
+import { clamp, getPosition } from "$lib/utils";
 
 /**
  * MIDI inputs and outputs, and connections to sequencers
@@ -55,11 +55,13 @@ const addListeners = () => {
 
         // note on adds note to activeNotes
         input.addListener("noteon", (e) => {
+            
             if(!get(isRecording)) return;
+
             activeNotes = [
                 ...activeNotes,
                 {
-                    position: get(position),
+                    position: getPosition(),
                     note: e.note.number,
                     // @ts-ignore
                     amp: e.velocity,
@@ -72,7 +74,7 @@ const addListeners = () => {
             const noteIndex = activeNotes.findIndex(n => n.note === e.note.number && n.duration === 0);
             if(noteIndex === -1) return;
             const note = activeNotes[noteIndex];
-            const pos = get(position);
+            const pos = getPosition();
             const duration = pos - note.position;
 
             // update the note with duration
