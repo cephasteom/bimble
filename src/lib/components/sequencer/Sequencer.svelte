@@ -178,7 +178,7 @@
             margin-top: -3px;
             
             &-key {
-                background-color: var(--grey);
+                background-color: var(--grey-lighter);
                 border-right: 3px solid var(--black-lighter);
                 box-sizing: border-box;
                 height: 1rem;
