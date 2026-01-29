@@ -225,7 +225,7 @@ export const query: (division: number) => { [sequencerIndex: number]: Note[] } =
     return Object.values(get(data)).reduce<{ [sequencerIndex: number]: Note[] }>((acc, s, i) => {
         const c = Math.floor(division / (get(divisions)));
         const globalT = evalBytebeat(get(globalBytebeat).bytebeat || 't', division, c);
-        const div = mod(evalBytebeat(s.bytebeat || 't', globalT, c), get(divisions) * bars);
+        const div = mod(evalBytebeat(s.bytebeat || 't', globalT, c), get(divisions) * get(bars));
         const position = divisionToPosition(div);
         return {
         ...acc,
@@ -244,8 +244,8 @@ export const query: (division: number) => { [sequencerIndex: number]: Note[] } =
  * @returns 
  */
 export const happensWithin = (division: number, position: number) => {
-    const div = division % (get(divisions) * bars);
-    const pos = Math.floor((position % bars) * get(divisions));
+    const div = division % (get(divisions) * get(bars));
+    const pos = Math.floor((position % get(bars)) * get(divisions));
     return div === pos;
 };
 

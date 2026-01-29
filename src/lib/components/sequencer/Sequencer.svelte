@@ -113,7 +113,7 @@
             role="application"
             on:mouseleave={handleMouseLeave}
         >
-            {#each Array($divisions * bars) as _, divisionIndex}
+            {#each Array($divisions * $bars) as _, divisionIndex}
                 {#each Array(notes) as _, noteIndex}
                     <Cell 
                         division={divisionIndex}
@@ -121,7 +121,7 @@
                         row={(notes - noteIndex) + 1}
                         on={$data[id].notes.some(n => happensWithin(divisionIndex, n.position) && n.note === noteIndex)}  
                         focused={currentCell.division === divisionIndex && currentCell.note === noteIndex} 
-                        active={$sequencerTs[id] !== -1 && $sequencerTs[id] % ($divisions * bars) === divisionIndex}
+                        active={$sequencerTs[id] !== -1 && $sequencerTs[id] % ($divisions * $bars) === divisionIndex}
                         handleMouseOver={() => currentNote = noteIndex}
                         handleMouseDown={handleMouseDown}
                         handleMouseUp={handleMouseUp}
@@ -200,7 +200,7 @@
         &__grid {
             display: grid;
             gap: 3px;
-            grid-template-columns: repeat(calc(get(divisions) * bars), 1fr);
+            grid-template-columns: repeat(calc(get(divisions) * get(bars)), 1fr);
             grid-template-rows: repeat(notes, .5fr);
             margin-top: -3px;
             position: relative;

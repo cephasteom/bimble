@@ -85,7 +85,7 @@ const addListeners = () => {
                     if(!get(data)[+sequencer]?.record) return;
                     addNote(
                         parseInt(sequencer),
-                        note.position % bars,
+                        note.position % get(bars),
                         note.note,
                         note.amp,
                         activeNotes[noteIndex].duration

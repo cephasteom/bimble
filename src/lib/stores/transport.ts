@@ -37,7 +37,7 @@ export const isMetronome = writable(false);
 isMetronome.subscribe(persist('bs.isMetronome'));
 export const toggleIsMetronome = () => isMetronome.update(m => !m);
 
-export const sequencerTs = derived([t, c, divisions, data, globalBytebeat], ([$t, $c, $divisions, $data, $globalBytebeat]) => {
+export const sequencerTs = derived([t, c, divisions, bars, data, globalBytebeat], ([$t, $c, $divisions, $bars, $data, $globalBytebeat]) => {
     return Object.entries($data).reduce<Record<number, number>>((
         result: Record<number, number>, 
         [sequencerIndex, sequencerData]
@@ -47,7 +47,7 @@ export const sequencerTs = derived([t, c, divisions, data, globalBytebeat], ([$t
             sequencerData.bytebeat || 't', 
             evalBytebeat($globalBytebeat.bytebeat || 't', $t, $c),
             $c
-        ), $divisions * bars)
+        ), $divisions * $bars)
     }), {} as Record<number, number>);
 });
 

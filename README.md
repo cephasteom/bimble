@@ -1,26 +1,23 @@
 TODO:
 Musts:
 * make some music / sound design
-* more bars please, perhaps with the default set to loop at 2?
 * volume fader - pushes all notes eventually to an amp of 1
 * tooltips
 
 Nice to haves once proven useful:
 * show note currently played on the piano roll
+* sync to DAW
+* clear all / reset
+* code editor
 * sequencer settings modal 
-    - number of bars
     - quantize division and pitch
     - interference 
     - random - generation and riffing on what's there
     - cellular automata
 * duplicate sequencer
 * cc interface
-* sync to DAW
-* transpose up and down octave
 * editable names for sequencers
-* clear all / reset
 * PWA
-* code editor...
 
 # ByteStep
 A MIDI step sequencer combining the convenience of a DAW with the flexibility of code. In development. 
