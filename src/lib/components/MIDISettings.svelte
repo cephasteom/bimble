@@ -20,11 +20,8 @@
     <Select 
         id="midi-settings-for"
         value={$midiSettingsActive}
-        options={ [
-            {label: "All", value: "all"},
-            ...Array.from({length: sequencers }, (_, i) => ({ label: `${i + 1}`, value: i }))
-        ] }
-        onChange={(value) => midiSettingsActive.set(value !== null ? value : 'all')}
+        options={ Array.from({length: sequencers }, (_, i) => ({ label: `${i + 1}`, value: i })) }
+        onChange={(value) => midiSettingsActive.set(Number(value))}
     />
     <h3>MIDI In</h3>
     <section>

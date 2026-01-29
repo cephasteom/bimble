@@ -1,9 +1,8 @@
 TODO:
 Musts:
 * make some music / sound design
-* bug: better rounding to nearest position on record
-* volume fader - pushes all notes eventually to an amp of 1
 * more bars please, perhaps with the default set to loop at 2?
+* volume fader - pushes all notes eventually to an amp of 1
 * handle global midi settings
 * tooltips
 

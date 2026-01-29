@@ -18,9 +18,8 @@ export const connections = writable<{[sequencer: number | string]: {
     output: string | null,
     outputChannel: number | null
 }}>(
-    [
-        'all',
-        ...Object.keys(get(data))].reduce((acc, key) => ({ 
+    Object.keys(get(data))
+        .reduce((acc, key) => ({ 
             ...acc, 
             [key]: { input: null, inputChannel: null, output: null, outputChannel: null } 
         }), {})
@@ -31,9 +30,9 @@ connections.subscribe(persist('bs.midiConnections'));
  * MIDI Settings Modal
  */
 export const showMidiSettings = writable(false);
-export const midiSettingsActive = writable<string | number>('all');
-export const openMidiSettings = (sequencer: string | number | null = null) => {
-    midiSettingsActive.set(sequencer !== null ? sequencer : 'all');
+export const midiSettingsActive = writable<number>(0);
+export const openMidiSettings = (sequencer: number | null = null) => {
+    sequencer !== null && midiSettingsActive.set(sequencer);
     showMidiSettings.set(true);
 }
 

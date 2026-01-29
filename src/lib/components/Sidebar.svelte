@@ -18,7 +18,7 @@
     <Button
         label="MIDI"
         padding={'0'}
-        onClick={() => openMidiSettings('all')}
+        onClick={() => openMidiSettings()}
         isActive={$showMidiSettings}
     >
         <SVG type="midi" width="2rem" />
