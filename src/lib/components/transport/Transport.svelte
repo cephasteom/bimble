@@ -7,7 +7,7 @@
         mapTransportKeys, 
         bpm
     } from '$lib/stores/transport';
-    import { timeSignature } from '$lib/stores/';
+    import { bars, timeSignature } from '$lib/stores/';
     import SVG from '$lib/components/SVG.svelte';
     import { onMount } from 'svelte';
     import Input from '$lib/components/Input.svelte';
@@ -19,8 +19,6 @@
 
 <div class="transport">
     <div>
-
-    
         <div class="transport__item">
             <Button
                 onClick={toggleIsPlaying}
@@ -54,6 +52,15 @@
                 suffix="/ 4" 
             />
         </div>
+
+        <div class="transport__item">
+            <Input 
+                value={$bars} 
+                onInput={(value) => bars.set(clamp(parseInt(value) || 2, 1, 4) )}
+                width=".75rem"
+                suffix="bars" 
+            />
+        </div>        
 
         <div class="transport__item">
             <Button

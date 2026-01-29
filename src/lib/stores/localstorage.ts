@@ -2,7 +2,7 @@ import { WebMidi } from "webmidi";
 import { connections, midiSettingsActive } from "./midi";
 import { activeSequencer, data, globalBytebeat, showSequencers } from "./sequencers";
 import { bpm, isMetronome } from "./transport";
-import { timeSignature } from ".";
+import { bars, timeSignature } from ".";
 
 /**
  * Load all store data from localStorage
@@ -17,7 +17,7 @@ export const loadAllStoreData = () => {
         }));
     });
 
-    midiSettingsActive.set(retrieve<string>('bs.midiSettingsActive', 'all'));
+    midiSettingsActive.set(retrieve<number>('bs.midiSettingsActive', 0));
 
     showSequencers.set(retrieve<boolean>('bs.showSequencers', true));
 
@@ -35,6 +35,7 @@ export const loadAllStoreData = () => {
     // populate transport data
     isMetronome.set(retrieve<boolean>('bs.isMetronome', false));
     bpm.set(retrieve<number>('bs.bpm', 120));
+    bars.set(retrieve<number>('bs.bars', 4));
     timeSignature.set(retrieve<number>('bs.timeSignature', 4));
     
 }
